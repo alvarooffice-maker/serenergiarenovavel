@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SER Energia Renovável — Energia solar residencial, comercial e rural em Belém/PA. Mais de 500 sistemas instalados. A homologação mais rápida do Pará." />
+  <title>SER Energia Renovável | Energia Solar em Belém/PA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-deep:       #0a0514;
+      --bg-mid:        #130825;
+      --purple-core:   #4b1a8a;
+      --purple-mid:    #6b2fa0;
+      --purple-bright: #9b59d0;
+      --purple-glow:   #c084fc;
+      --purple-soft:   rgba(155,89,208,0.15);
+      --silver:        #c8c8e0;
+      --silver-bright: #f0f0ff;
+      --white:         #ffffff;
+      --accent:        #e0b0ff;
+      --border:        rgba(155,89,208,0.25);
+      --border-hover:  rgba(192,132,252,0.6);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-deep);
+      color: var(--silver);
+      font-family: 'Exo 2', sans-serif;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ═══════════════════════════════
+       BACKGROUND SYSTEM
+    ═══════════════════════════════ */
+    .bg-canvas {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 90% 70% at 50% -5%,  rgba(107,47,160,0.55) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 60% at 90% 100%, rgba(75,26,138,0.4)   0%, transparent 55%),
+        radial-gradient(ellipse 40% 50% at 0%  80%,  rgba(40,10,90,0.5)    0%, transparent 55%),
+        linear-gradient(180deg, #0a0514 0%, #0d0620 40%, #0a0514 100%);
+    }
+    .bg-canvas::after {
+      content:''; position:fixed; inset:0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.035; pointer-events:none;
+    }
+
+    /* Energy lines */
+    .energy-lines { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+    .el {
+      position:absolute; width:1px;
+      background: linear-gradient(to bottom, transparent 0%, rgba(192,132,252,0.7) 50%, transparent 100%);
+      opacity:0; animation: elFall linear infinite;
+    }
+    .el:nth-child(1){left:5%;  height:30vh; animation-duration:4s;   animation-delay:0s;   }
+    .el:nth-child(2){left:15%; height:50vh; animation-duration:6.5s; animation-delay:1.4s; }
+    .el:nth-child(3){left:26%; height:25vh; animation-duration:3.8s; animation-delay:0.7s; }
+    .el:nth-child(4){left:38%; height:45vh; animation-duration:5.2s; animation-delay:2.1s; }
+    .el:nth-child(5){left:52%; height:35vh; animation-duration:4.6s; animation-delay:0.4s; }
+    .el:nth-child(6){left:64%; height:55vh; animation-duration:7s;   animation-delay:1.9s; }
+    .el:nth-child(7){left:76%; height:28vh; animation-duration:3.5s; animation-delay:0.9s; }
+    .el:nth-child(8){left:88%; height:40vh; animation-duration:5.8s; animation-delay:2.7s; }
+    .el:nth-child(9){left:95%; height:20vh; animation-duration:4.2s; animation-delay:1.1s; }
+    @keyframes elFall {
+      0%  { top:-60vh; opacity:0; }
+      8%  { opacity:0.7; }
+      92% { opacity:0.3; }
+      100%{ top:110vh;  opacity:0; }
+    }
+
+    /* ═══════════════════════════════
+       LAYOUT
+    ═══════════════════════════════ */
+    .page { position:relative; z-index:1; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:100;
+      padding: 16px 40px;
+      display: flex; align-items:center; justify-content:space-between;
+      background: linear-gradient(to bottom, rgba(10,5,20,0.9) 0%, transparent 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .nav-logo img { height: 48px; filter: drop-shadow(0 0 12px rgba(155,89,208,0.5)); }
+    .nav-cta {
+      display:flex; align-items:center; gap:8px;
+      padding: 10px 22px;
+      border: 1.5px solid var(--border-hover);
+      border-radius:4px;
+      background: rgba(107,47,160,0.2);
+      color: var(--silver-bright);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem; font-weight:700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .nav-cta:hover {
+      background: rgba(155,89,208,0.35);
+      box-shadow: 0 0 20px rgba(155,89,208,0.4);
+    }
+    .nav-cta svg { width:16px; height:16px; fill:currentColor; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center;
+      padding: 120px 24px 80px;
+    }
+
+    .hero-logo {
+      opacity:0; transform: scale(0.8) translateY(30px);
+      animation: heroLogoIn 1.1s cubic-bezier(.2,.9,.4,1.2) 0.3s forwards;
+    }
+    .hero-logo img {
+      width: min(400px, 82vw);
+      filter: drop-shadow(0 0 50px rgba(155,89,208,0.65))
+              drop-shadow(0 0 100px rgba(155,89,208,0.3));
+      animation: logoPulse 4s ease-in-out 1.5s infinite;
+    }
+    @keyframes heroLogoIn { to { opacity:1; transform:scale(1) translateY(0); } }
+    @keyframes logoPulse {
+      0%,100% { filter: drop-shadow(0 0 50px rgba(155,89,208,0.65)) drop-shadow(0 0 100px rgba(155,89,208,0.3)); }
+      50%      { filter: drop-shadow(0 0 70px rgba(192,132,252,0.9)) drop-shadow(0 0 130px rgba(155,89,208,0.5)); }
+    }
+
+    .hero-eyebrow {
+      margin-top: 36px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(0.75rem, 2vw, 0.9rem);
+      font-weight: 600; letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--purple-glow);
+      opacity:0; animation: fadeUp 0.9s ease 1s forwards;
+    }
+
+    .hero-h1 {
+      margin-top: 16px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 9vw, 6.5rem);
+      line-height: 0.95;
+      letter-spacing: 0.03em;
+      color: var(--silver-bright);
+      text-shadow: 0 0 80px rgba(192,132,252,0.4);
+      opacity:0; animation: fadeUp 0.9s ease 1.2s forwards;
+    }
+    .hero-h1 em {
+      font-style:normal;
+      background: linear-gradient(135deg, #d0a0ff, #f0d0ff, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      margin-top: 22px;
+      max-width: 560px;
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(200,200,224,0.8);
+      opacity:0; animation: fadeUp 0.9s ease 1.5s forwards;
+    }
+
+    .hero-badges {
+      margin-top: 36px;
+      display:flex; flex-wrap:wrap; gap:12px; justify-content:center;
+      opacity:0; animation: fadeUp 0.9s ease 1.7s forwards;
+    }
+    .badge {
+      display:flex; align-items:center; gap:8px;
+      padding: 9px 18px;
+      border-radius:40px;
+      border: 1px solid rgba(155,89,208,0.4);
+      background: rgba(107,47,160,0.15);
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.85rem; font-weight:600;
+      letter-spacing:0.1em; text-transform:uppercase;
+      color: rgba(220,210,240,0.9);
+    }
+    .badge-icon { width:16px; height:16px; stroke:var(--purple-glow); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+
+    .hero-btns {
+      margin-top: 48px;
+      display:flex; flex-wrap:wrap; gap:16px; justify-content:center;
+      opacity:0; animation: fadeUp 0.9s ease 1.9s forwards;
+    }
+    .btn-primary {
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 17px 44px;
+      border-radius:4px;
+      background: linear-gradient(135deg, #7c3aed, #5b21b6);
+      color: var(--white);
+      font-family:'Rajdhani',sans-serif;
+      font-size:1rem; font-weight:700;
+      letter-spacing:0.18em; text-transform:uppercase;
+      text-decoration:none;
+      box-shadow: 0 8px 32px rgba(107,47,160,0.5), 0 0 0 1px rgba(155,89,208,0.3);
+      transition:all 0.3s;
+      position:relative; overflow:hidden;
+    }
+    .btn-primary::before {
+      content:''; position:absolute; inset:0;
+      background: linear-gradient(135deg, #9d5aff, #7c3aed);
+      opacity:0; transition:opacity 0.3s;
+    }
+    .btn-primary:hover::before { opacity:1; }
+    .btn-primary:hover { box-shadow:0 12px 40px rgba(155,89,208,0.7), 0 0 0 1px rgba(192,132,252,0.5); transform:translateY(-2px); }
+    .btn-primary span, .btn-primary svg { position:relative; z-index:1; }
+    .btn-primary svg { width:18px; height:18px; fill:currentColor; }
+
+    .btn-secondary {
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 17px 44px;
+      border-radius:4px;
+      border: 1.5px solid var(--border-hover);
+      background: rgba(107,47,160,0.12);
+      color: var(--silver-bright);
+      font-family:'Rajdhani',sans-serif;
+      font-size:1rem; font-weight:700;
+      letter-spacing:0.18em; text-transform:uppercase;
+      text-decoration:none;
+      transition:all 0.3s;
+    }
+    .btn-secondary:hover {
+      background: rgba(155,89,208,0.2);
+      border-color: var(--purple-glow);
+      box-shadow: 0 0 25px rgba(155,89,208,0.35);
+      transform:translateY(-2px);
+    }
+    .btn-secondary svg { width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* scroll hint */
+    .scroll-hint {
+      margin-top:60px;
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+      opacity:0; animation: fadeIn 1s ease 2.5s forwards;
+      color: rgba(155,89,208,0.5);
+      font-family:'Rajdhani',sans-serif; font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase;
+    }
+    .scroll-hint .arrow { animation: arrowBounce 1.5s ease-in-out infinite; }
+    @keyframes arrowBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      width: min(800px, 90vw); height:1px; margin:0 auto;
+      background: linear-gradient(to right, transparent, rgba(155,89,208,0.4), transparent);
+    }
+
+    /* ── STATS ── */
+    #stats {
+      padding: 70px 24px;
+    }
+    .stats-grid {
+      max-width:900px; margin:0 auto;
+      display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow:hidden;
+      background: var(--border);
+    }
+    .stat-card {
+      padding: 40px 32px;
+      background: rgba(19,8,37,0.85);
+      text-align:center;
+      transition: background 0.3s;
+    }
+    .stat-card:hover { background: rgba(107,47,160,0.15); }
+    .stat-num {
+      font-family:'Bebas Neue',sans-serif;
+      font-size: clamp(3rem, 7vw, 4.5rem);
+      line-height:1;
+      background: linear-gradient(135deg, #d0a0ff, #f0e0ff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .stat-label {
+      margin-top:10px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.85rem; font-weight:600;
+      letter-spacing:0.18em; text-transform:uppercase;
+      color: rgba(192,132,252,0.7);
+    }
+
+    /* ── SECTION HEADER ── */
+    .sec-header { text-align:center; margin-bottom:56px; }
+    .sec-eyebrow {
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.82rem; font-weight:600;
+      letter-spacing:0.4em; text-transform:uppercase;
+      color: var(--purple-glow);
+      margin-bottom:14px;
+    }
+    .sec-title {
+      font-family:'Bebas Neue',sans-serif;
+      font-size: clamp(2.2rem,6vw,3.8rem);
+      line-height:1;
+      color: var(--silver-bright);
+      text-shadow: 0 0 40px rgba(192,132,252,0.25);
+    }
+    .sec-sub {
+      margin-top:16px;
+      font-size:1rem; font-weight:300; line-height:1.7;
+      color: rgba(200,200,224,0.7);
+      max-width:540px; margin-left:auto; margin-right:auto;
+    }
+
+    /* ── SERVICES ── */
+    #servicos { padding: 90px 24px; }
+    .services-grid {
+      max-width: 1080px; margin:0 auto;
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .service-card {
+      padding: 36px 30px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(19,8,37,0.7);
+      transition: all 0.3s;
+      position:relative; overflow:hidden;
+    }
+    .service-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background: linear-gradient(to right, transparent, var(--purple-bright), transparent);
+      opacity:0; transition:opacity 0.3s;
+    }
+    .service-card:hover { border-color: rgba(155,89,208,0.5); background:rgba(107,47,160,0.12); transform:translateY(-4px); box-shadow:0 20px 50px rgba(75,26,138,0.3); }
+    .service-card:hover::before { opacity:1; }
+    .service-icon {
+      width:52px; height:52px;
+      border-radius:12px;
+      background: linear-gradient(135deg, rgba(107,47,160,0.4), rgba(75,26,138,0.2));
+      border: 1px solid rgba(155,89,208,0.3);
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:22px;
+    }
+    .service-icon svg { width:26px; height:26px; stroke:var(--purple-glow); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .service-title {
+      font-family:'Rajdhani',sans-serif;
+      font-size:1.15rem; font-weight:700;
+      letter-spacing:0.08em; text-transform:uppercase;
+      color:var(--silver-bright); margin-bottom:10px;
+    }
+    .service-desc {
+      font-size:0.9rem; font-weight:300; line-height:1.65;
+      color:rgba(200,200,224,0.65);
+    }
+
+    /* ── DIFERENCIAIS ── */
+    #diferenciais { padding: 90px 24px; }
+    .diff-grid {
+      max-width:900px; margin:0 auto;
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+      gap:20px;
+    }
+    .diff-card {
+      padding:36px 28px; text-align:center;
+      border:1px solid var(--border); border-radius:8px;
+      background:rgba(19,8,37,0.7);
+      transition:all 0.3s;
+    }
+    .diff-card:hover { border-color:rgba(155,89,208,0.5); background:rgba(107,47,160,0.1); transform:translateY(-3px); }
+    .diff-num {
+      font-family:'Bebas Neue',sans-serif;
+      font-size:3.5rem; line-height:1;
+      background:linear-gradient(135deg,#d0a0ff,#f0d0ff);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .diff-label {
+      margin-top:8px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.88rem; font-weight:600;
+      letter-spacing:0.15em; text-transform:uppercase;
+      color:rgba(192,132,252,0.75);
+    }
+    .diff-desc {
+      margin-top:14px;
+      font-size:0.88rem; font-weight:300; line-height:1.6;
+      color:rgba(200,200,224,0.6);
+    }
+
+    /* ── COMO FUNCIONA ── */
+    #como-funciona { padding: 90px 24px; }
+    .steps {
+      max-width:800px; margin:0 auto;
+      display:flex; flex-direction:column; gap:0;
+    }
+    .step {
+      display:grid; grid-template-columns:60px 1fr;
+      gap:0 28px;
+      position:relative;
+    }
+    .step-left {
+      display:flex; flex-direction:column; align-items:center;
+    }
+    .step-dot {
+      width:48px; height:48px; border-radius:50%;
+      background:linear-gradient(135deg,#7c3aed,#5b21b6);
+      border:2px solid rgba(155,89,208,0.5);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Bebas Neue',sans-serif; font-size:1.4rem;
+      color:var(--white);
+      box-shadow:0 0 24px rgba(107,47,160,0.5);
+      flex-shrink:0;
+    }
+    .step-line {
+      width:2px; flex:1; min-height:40px;
+      background:linear-gradient(to bottom,rgba(155,89,208,0.5),rgba(155,89,208,0.1));
+      margin:4px 0;
+    }
+    .step:last-child .step-line { display:none; }
+    .step-content { padding:0 0 48px; }
+    .step-title {
+      font-family:'Rajdhani',sans-serif;
+      font-size:1.1rem; font-weight:700;
+      letter-spacing:0.08em; text-transform:uppercase;
+      color:var(--silver-bright); margin-bottom:8px; margin-top:10px;
+    }
+    .step-desc {
+      font-size:0.92rem; font-weight:300; line-height:1.65;
+      color:rgba(200,200,224,0.65);
+    }
+
+    /* ── CTA BAND ── */
+    #cta-band {
+      padding: 90px 24px;
+      text-align:center;
+    }
+    .cta-box {
+      max-width:780px; margin:0 auto;
+      padding:64px 48px;
+      border:1px solid rgba(155,89,208,0.35);
+      border-radius:12px;
+      background:
+        radial-gradient(ellipse 70% 80% at 50% 50%, rgba(107,47,160,0.2) 0%, transparent 70%),
+        rgba(19,8,37,0.8);
+      position:relative; overflow:hidden;
+    }
+    .cta-box::before {
+      content:''; position:absolute; top:-1px; left:10%; right:10%; height:1px;
+      background:linear-gradient(to right,transparent,rgba(192,132,252,0.7),transparent);
+    }
+    .cta-box::after {
+      content:''; position:absolute; bottom:-1px; left:10%; right:10%; height:1px;
+      background:linear-gradient(to right,transparent,rgba(155,89,208,0.4),transparent);
+    }
+    .cta-box .sec-title { margin-bottom:16px; }
+    .cta-box .sec-sub { margin-bottom:40px; }
+    .cta-contacts {
+      margin-top:36px;
+      display:flex; flex-wrap:wrap; gap:20px; justify-content:center;
+    }
+    .contact-item {
+      display:flex; align-items:center; gap:10px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.9rem; font-weight:600;
+      letter-spacing:0.1em;
+      color:rgba(200,200,224,0.7);
+    }
+    .contact-item svg { width:18px; height:18px; stroke:var(--purple-glow); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding:32px 40px;
+      border-top:1px solid rgba(155,89,208,0.15);
+      display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px;
+    }
+    .footer-logo img { height:36px; filter:drop-shadow(0 0 8px rgba(155,89,208,0.35)); opacity:0.8; }
+    .footer-copy {
+      font-size:0.78rem; letter-spacing:0.12em;
+      color:rgba(155,89,208,0.45);
+    }
+
+    /* ── WHATSAPP FAB ── */
+    .wha-fab {
+      position:fixed; bottom:28px; right:28px; z-index:200;
+      width:60px; height:60px; border-radius:50%;
+      background:linear-gradient(135deg,#25d366,#128c7e);
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 8px 30px rgba(37,211,102,0.45);
+      transition:all 0.3s;
+      text-decoration:none;
+    }
+    .wha-fab:hover { transform:scale(1.1); box-shadow:0 12px 40px rgba(37,211,102,0.65); }
+    .wha-fab svg { width:30px; height:30px; fill:white; }
+    .wha-fab-pulse {
+      position:absolute; inset:-6px; border-radius:50%;
+      border:2px solid rgba(37,211,102,0.4);
+      animation:whaFabPulse 2s ease-out infinite;
+    }
+    @keyframes whaFabPulse {
+      0%  { transform:scale(1);   opacity:0.8; }
+      100%{ transform:scale(1.5); opacity:0; }
+    }
+
+    /* ═══════════════════════════════
+       ANIMATIONS
+    ═══════════════════════════════ */
+    @keyframes fadeUp  { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+
+    /* scroll reveal */
+    .reveal {
+      opacity:0; transform:translateY(32px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:0.1s; }
+    .reveal-delay-2 { transition-delay:0.2s; }
+    .reveal-delay-3 { transition-delay:0.3s; }
+    .reveal-delay-4 { transition-delay:0.4s; }
+    .reveal-delay-5 { transition-delay:0.5s; }
+    .reveal-delay-6 { transition-delay:0.6s; }
+
+    /* ═══════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════ */
+    @media(max-width:640px){
+      nav { padding:14px 20px; }
+      .nav-cta span { display:none; }
+      .cta-box { padding:40px 24px; }
+      footer { flex-direction:column; text-align:center; }
+      .hero-btns { flex-direction:column; align-items:center; }
+      .btn-primary, .btn-secondary { width:100%; max-width:320px; justify-content:center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BG -->
+  <div class="bg-canvas"></div>
+  <div class="energy-lines">
+    <div class="el"></div><div class="el"></div><div class="el"></div>
+    <div class="el"></div><div class="el"></div><div class="el"></div>
+    <div class="el"></div><div class="el"></div><div class="el"></div>
+  </div>
+
+  <!-- WHATSAPP FAB -->
+  <a class="wha-fab" href="https://wa.me/5591993560305" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <div class="wha-fab-pulse"></div>
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <div class="page">
+
+    <!-- NAV -->
+    <nav>
+      <a class="nav-logo" href="#hero">
+        <img src="ser_logo.jpg" alt="SER Energia Renovável" />
+      </a>
+      <a class="nav-cta" href="https://wa.me/5591993560305" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span>Orçamento Grátis</span>
+      </a>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+      <div class="hero-logo">
+        <img src="ser_logo.jpg" alt="SER Energia Renovável" />
+      </div>
+      <p class="hero-eyebrow">Especialistas em energia solar · Belém/PA</p>
+      <h1 class="hero-h1">Reduza sua<br><em>conta de luz</em><br>até 95%</h1>
+      <p class="hero-sub">
+        Da consultoria à homologação, cuidamos de tudo. Energia solar para
+        residências, empresas e propriedades rurais em todo o Pará.
+      </p>
+      <div class="hero-badges">
+        <div class="badge">
+          <svg class="badge-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          +500 Sistemas Instalados
+        </div>
+        <div class="badge">
+          <svg class="badge-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Homologação + Rápida do Pará
+        </div>
+        <div class="badge">
+          <svg class="badge-icon" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          +3 Anos de Mercado
+        </div>
+      </div>
+      <div class="hero-btns">
+        <a class="btn-primary" href="https://wa.me/5591993560305?text=Olá!%20Gostaria%20de%20um%20orçamento%20de%20energia%20solar." target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span>Solicitar Orçamento Grátis</span>
+        </a>
+        <a class="btn-secondary" href="#servicos">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 8 16 12 12 16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Ver Soluções
+        </a>
+      </div>
+      <div class="scroll-hint">
+        <span>Role para saber mais</span>
+        <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- STATS -->
+    <section id="stats">
+      <div class="stats-grid">
+        <div class="stat-card reveal">
+          <div class="stat-num">+500</div>
+          <div class="stat-label">Sistemas Instalados</div>
+        </div>
+        <div class="stat-card reveal reveal-delay-1">
+          <div class="stat-num">+3</div>
+          <div class="stat-label">Anos de Mercado</div>
+        </div>
+        <div class="stat-card reveal reveal-delay-2">
+          <div class="stat-num">95%</div>
+          <div class="stat-label">Redução na Conta</div>
+        </div>
+        <div class="stat-card reveal reveal-delay-3">
+          <div class="stat-num">#1</div>
+          <div class="stat-label">Homologação + Rápida do Pará</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- SERVIÇOS -->
+    <section id="servicos">
+      <div class="sec-header reveal">
+        <p class="sec-eyebrow">O que oferecemos</p>
+        <h2 class="sec-title">Soluções Completas<br>em Energia Solar</h2>
+        <p class="sec-sub">Do projeto à homologação junto à distribuidora, entregamos tudo pronto para você economizar.</p>
+      </div>
+      <div class="services-grid">
+
+        <div class="service-card reveal reveal-delay-1">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="service-title">Solar Residencial</div>
+          <div class="service-desc">Economize até 95% na conta de luz da sua casa. Projeto personalizado, instalação segura e rápida retorno do investimento.</div>
+        </div>
+
+        <div class="service-card reveal reveal-delay-2">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <div class="service-title">Solar Comercial</div>
+          <div class="service-desc">Reduza os custos operacionais do seu negócio com sistemas de médio e grande porte, aumentando sua competitividade.</div>
+        </div>
+
+        <div class="service-card reveal reveal-delay-3">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><path d="M2 22 L22 2"/><path d="M6.5 6.5 A8 8 0 0 1 17.5 17.5"/><path d="M3 3 L9 9"/><path d="M15 15 L21 21"/></svg>
+          </div>
+          <div class="service-title">Solar Rural</div>
+          <div class="service-desc">Soluções robustas para fazendas, granjas e propriedades rurais. Energia limpa onde a rede elétrica é cara ou instável.</div>
+        </div>
+
+        <div class="service-card reveal reveal-delay-1">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h6"/><path d="M9 11h6"/><path d="M9 15h4"/><path d="M12 18v3"/></svg>
+          </div>
+          <div class="service-title">Carregador Veículo Elétrico</div>
+          <div class="service-desc">Integre sua estação de carregamento ao sistema solar e carregue seu veículo elétrico com energia 100% limpa e gratuita.</div>
+        </div>
+
+        <div class="service-card reveal reveal-delay-2">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><rect x="6" y="7" width="12" height="10" rx="2"/><path d="M9 7V4"/><path d="M15 7V4"/><path d="M2 12h4M18 12h4"/></svg>
+          </div>
+          <div class="service-title">Sistema de Bateria</div>
+          <div class="service-desc">Armazene energia e garanta autonomia total. Mesmo durante quedas da rede, sua casa ou empresa continua funcionando.</div>
+        </div>
+
+        <div class="service-card reveal reveal-delay-3">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="service-title">Assinatura Solar</div>
+          <div class="service-desc">Energia solar sem investimento inicial. Pague apenas pela energia que usar, com desconto garantido desde o primeiro mês.</div>
+        </div>
+
+        <div class="service-card reveal reveal-delay-1" style="grid-column: 1 / -1; max-width:500px; margin:0 auto; width:100%;">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="service-title">Mercado Livre de Energia</div>
+          <div class="service-desc">Para médias e grandes empresas: migre para o Mercado Livre de Energia e negocie sua energia diretamente, com economia de 20% a 35%.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- DIFERENCIAIS -->
+    <section id="diferenciais">
+      <div class="sec-header reveal">
+        <p class="sec-eyebrow">Por que a SER?</p>
+        <h2 class="sec-title">Nossos Diferenciais</h2>
+      </div>
+      <div class="diff-grid">
+        <div class="diff-card reveal reveal-delay-1">
+          <div class="diff-num">+500</div>
+          <div class="diff-label">Sistemas Instalados</div>
+          <div class="diff-desc">Centenas de clientes satisfeitos em residências, comércios e propriedades rurais no Pará.</div>
+        </div>
+        <div class="diff-card reveal reveal-delay-2">
+          <div class="diff-num">#1</div>
+          <div class="diff-label">Homologação Mais Rápida</div>
+          <div class="diff-desc">Processo ágil junto à distribuidora. Você começa a economizar muito antes da concorrência.</div>
+        </div>
+        <div class="diff-card reveal reveal-delay-3">
+          <div class="diff-num">+3</div>
+          <div class="diff-label">Anos de Experiência</div>
+          <div class="diff-desc">Equipe técnica qualificada, comprometida com qualidade, segurança e resultados reais.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- COMO FUNCIONA -->
+    <section id="como-funciona">
+      <div class="sec-header reveal">
+        <p class="sec-eyebrow">Processo</p>
+        <h2 class="sec-title">Como Funciona?</h2>
+        <p class="sec-sub">Do primeiro contato até você gerando sua própria energia — simples e sem burocracia.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-left"><div class="step-dot">1</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Consultoria Gratuita</div>
+            <div class="step-desc">Nossa equipe analisa sua conta de luz e perfil de consumo para dimensionar o sistema ideal para você — sem nenhum custo.</div>
+          </div>
+        </div>
+        <div class="step reveal reveal-delay-1">
+          <div class="step-left"><div class="step-dot">2</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Projeto e Proposta</div>
+            <div class="step-desc">Elaboramos o projeto técnico completo com memorial de cálculo, layout e previsão de economia. Proposta clara e sem surpresas.</div>
+          </div>
+        </div>
+        <div class="step reveal reveal-delay-2">
+          <div class="step-left"><div class="step-dot">3</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Instalação</div>
+            <div class="step-desc">Equipe técnica certificada realiza a instalação com segurança, organização e agilidade, respeitando seu imóvel.</div>
+          </div>
+        </div>
+        <div class="step reveal reveal-delay-3">
+          <div class="step-left"><div class="step-dot">4</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Homologação Expressa</div>
+            <div class="step-desc">Cuidamos de toda a documentação e aprovação junto à distribuidora. A homologação mais rápida do Pará — sua responsabilidade zero.</div>
+          </div>
+        </div>
+        <div class="step reveal reveal-delay-4">
+          <div class="step-left"><div class="step-dot">5</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Economia Todo Mês</div>
+            <div class="step-desc">Sistema conectado, você começa a gerar energia e ver a economia na conta de luz imediatamente. Monitoramento via app.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- CTA BAND -->
+    <section id="cta-band">
+      <div class="cta-box reveal">
+        <p class="sec-eyebrow">Fale com um especialista</p>
+        <h2 class="sec-title">Pronto para <em style="font-style:normal;background:linear-gradient(135deg,#d0a0ff,#f0d0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Economizar?</em></h2>
+        <p class="sec-sub">Solicite agora uma análise gratuita do seu consumo. Sem compromisso, sem burocracia.</p>
+        <a class="btn-primary" href="https://wa.me/5591993560305?text=Olá!%20Gostaria%20de%20um%20orçamento%20de%20energia%20solar." target="_blank" rel="noopener" style="display:inline-flex;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span>Solicitar Orçamento Grátis</span>
+        </a>
+        <div class="cta-contacts">
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.8 10.72 19.79 19.79 0 01.73 2.1 2 2 0 012.7 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.06 6.06l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            (91) 99356-0305
+          </div>
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            serenergiarenovavel.pa@gmail.com
+          </div>
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Belém/PA e região
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-logo">
+        <img src="ser_logo.jpg" alt="SER Energia Renovável" />
+      </div>
+      <div class="footer-copy">© 2025 SER ENERGIA RENOVÁVEL · CNPJ · Todos os direitos reservados</div>
+    </footer>
+
+  </div><!-- end .page -->
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(r => observer.observe(r));
+  </script>
+
+</body>
+</html>
