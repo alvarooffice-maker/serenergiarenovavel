@@ -1,0 +1,47 @@
+---
+const lines = Array.from({ length: 9 });
+---
+
+<div class="bg-canvas"></div>
+<div class="energy-lines">
+  {lines.map(() => <div class="el"></div>)}
+</div>
+
+<style>
+  .bg-canvas {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 90% 70% at 50% -5%,  rgba(107,47,160,0.55) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 90% 100%, rgba(75,26,138,0.4)   0%, transparent 55%),
+      radial-gradient(ellipse 40% 50% at 0%  80%,  rgba(40,10,90,0.5)    0%, transparent 55%),
+      linear-gradient(180deg, #0a0514 0%, #0d0620 40%, #0a0514 100%);
+  }
+  .bg-canvas::after {
+    content:''; position:fixed; inset:0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.035; pointer-events:none;
+  }
+
+  /* Energy lines */
+  .energy-lines { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+  .el {
+    position:absolute; width:1px;
+    background: linear-gradient(to bottom, transparent 0%, rgba(192,132,252,0.7) 50%, transparent 100%);
+    opacity:0; animation: elFall linear infinite;
+  }
+  .el:nth-child(1){left:5%;  height:30vh; animation-duration:4s;   animation-delay:0s;   }
+  .el:nth-child(2){left:15%; height:50vh; animation-duration:6.5s; animation-delay:1.4s; }
+  .el:nth-child(3){left:26%; height:25vh; animation-duration:3.8s; animation-delay:0.7s; }
+  .el:nth-child(4){left:38%; height:45vh; animation-duration:5.2s; animation-delay:2.1s; }
+  .el:nth-child(5){left:52%; height:35vh; animation-duration:4.6s; animation-delay:0.4s; }
+  .el:nth-child(6){left:64%; height:55vh; animation-duration:7s;   animation-delay:1.9s; }
+  .el:nth-child(7){left:76%; height:28vh; animation-duration:3.5s; animation-delay:0.9s; }
+  .el:nth-child(8){left:88%; height:40vh; animation-duration:5.8s; animation-delay:2.7s; }
+  .el:nth-child(9){left:85%; height:20vh; animation-duration:4.2s; animation-delay:1.1s; }
+  @keyframes elFall {
+    0%  { top:-60vh; opacity:0; }
+    8%  { opacity:0.7; }
+    92% { opacity:0.3; }
+    100%{ top:110vh;  opacity:0; }
+  }
+</style>

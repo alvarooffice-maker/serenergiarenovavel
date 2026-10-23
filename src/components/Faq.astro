@@ -1,0 +1,65 @@
+---
+import type { Pergunta } from '../data/produtos';
+
+interface Props {
+  perguntas: Pergunta[];
+  titulo?: string;
+  eyebrow?: string;
+}
+
+const { perguntas, titulo = 'Perguntas Frequentes', eyebrow = 'Dúvidas' } = Astro.props;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: perguntas.map((p) => ({
+    '@type': 'Question',
+    name: p.q,
+    acceptedAnswer: { '@type': 'Answer', text: p.a },
+  })),
+};
+---
+
+<section id="faq">
+  <div class="sec-header reveal">
+    <p class="sec-eyebrow">{eyebrow}</p>
+    <h2 class="sec-title">{titulo}</h2>
+  </div>
+  <div class="faq-list">
+    {perguntas.map((p) => (
+      <details class="faq-item reveal">
+        <summary>{p.q}</summary>
+        <p>{p.a}</p>
+      </details>
+    ))}
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</section>
+
+<style>
+  #faq { padding: 90px 24px; }
+  .faq-list { max-width: 800px; margin: 0 auto; display: grid; gap: 12px; }
+  .faq-item {
+    border: 1px solid var(--border); border-radius: 8px;
+    background: rgba(19,8,37,0.7);
+    transition: border-color 0.3s;
+  }
+  .faq-item[open] { border-color: rgba(155,89,208,0.55); }
+  summary {
+    list-style: none; cursor: pointer;
+    padding: 20px 56px 20px 24px; position: relative;
+    font-family: 'Rajdhani', sans-serif; font-size: 1.05rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--silver-bright);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: '+'; position: absolute; right: 24px; top: 50%; transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--purple-glow);
+    transition: transform 0.3s;
+  }
+  .faq-item[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+  .faq-item p {
+    padding: 0 24px 22px;
+    font-size: 0.95rem; font-weight: 300; line-height: 1.7; color: rgba(200,200,224,0.75);
+  }
+</style>

@@ -1,0 +1,433 @@
+---
+import { SIMULADOR, TIPOS_IMOVEL, LEAD_ENDPOINT } from '../data/simulador';
+import { WHATSAPP_URL, WHATSAPP_ICON_PATH } from '../data/site';
+
+const config = JSON.stringify({ ...SIMULADOR, endpoint: LEAD_ENDPOINT, whatsapp: WHATSAPP_URL });
+---
+
+<section id="simulador">
+  <div class="sec-header reveal">
+    <p class="sec-eyebrow">Simulador</p>
+    <h2 class="sec-title">Quanto você pode<br>economizar?</h2>
+    <p class="sec-sub">Informe o valor médio da sua conta de luz e veja uma estimativa em segundos.</p>
+  </div>
+
+  <div class="sim-box reveal" data-config={config}>
+    <form class="sim-step sim-entrada" novalidate>
+      <label class="sim-field">
+        <span class="sim-label">Valor médio da conta de luz</span>
+        <span class="sim-money">
+          <span>R$</span>
+          <input name="conta" type="text" inputmode="decimal" placeholder="350" required autocomplete="off" />
+        </span>
+      </label>
+      <fieldset class="sim-field">
+        <legend class="sim-label">Tipo de imóvel</legend>
+        <div class="sim-chips">
+          {TIPOS_IMOVEL.map((t, i) => (
+            <label class="sim-chip">
+              <input type="radio" name="tipo" value={t.value} checked={i === 0} />
+              <span>{t.label}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <p class="sim-erro" data-erro-entrada hidden></p>
+      <button class="btn-primary sim-btn" type="submit"><span>Simular economia</span></button>
+    </form>
+
+    <div class="sim-step sim-resumo" hidden>
+      <div class="sim-cards">
+        <div class="sim-card">
+          <div class="sim-card-num" data-out="economia"></div>
+          <div class="sim-card-label">Economia estimada por mês</div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card-num" data-out="placas"></div>
+          <div class="sim-card-label">Placas de <span data-out="potencia"></span> W</div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card-num" data-out="consumo"></div>
+          <div class="sim-card-label">Consumo estimado por mês</div>
+        </div>
+      </div>
+
+      <form class="sim-lead" novalidate>
+        <p class="sim-lead-title">Receba o resultado completo: investimento, tempo de retorno e economia em 25 anos.</p>
+        <div class="sim-grid">
+          <label class="sim-field">
+            <span class="sim-label">Nome</span>
+            <input name="nome" type="text" autocomplete="name" required maxlength="120" />
+          </label>
+          <label class="sim-field">
+            <span class="sim-label">WhatsApp</span>
+            <input name="telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(91) 90000-0000" required maxlength="20" />
+          </label>
+          <label class="sim-field sim-full">
+            <span class="sim-label">Bairro e cidade</span>
+            <input name="local" type="text" placeholder="Marco, Belém" required maxlength="120" />
+          </label>
+          <label class="sim-hp" aria-hidden="true">
+            Empresa <input name="empresa" type="text" tabindex="-1" autocomplete="off" />
+          </label>
+        </div>
+        <label class="sim-lgpd">
+          <input name="lgpd" type="checkbox" required />
+          <span>Autorizo a SER Energia Renovável a usar estes dados para entrar em contato sobre a minha simulação, conforme a <a href="/privacidade/" target="_blank">Política de Privacidade</a>.</span>
+        </label>
+        <p class="sim-erro" data-erro-lead hidden></p>
+        <div class="sim-acoes">
+          <button class="btn-primary sim-btn" type="submit"><span>Ver resultado completo</span></button>
+          <button class="sim-voltar" type="button" data-voltar>Refazer simulação</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="sim-step sim-completo" hidden>
+      <p class="sim-aviso" data-aviso hidden></p>
+      <div class="sim-cards">
+        <div class="sim-card">
+          <div class="sim-card-num" data-out="kwp"></div>
+          <div class="sim-card-label">Potência do sistema</div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card-num sim-card-num--sm" data-out="investimento"></div>
+          <div class="sim-card-label">Investimento estimado</div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card-num" data-out="retorno"></div>
+          <div class="sim-card-label">Retorno do investimento</div>
+        </div>
+      </div>
+      <div class="sim-chart">
+        <div class="sim-chart-head">
+          <span>Economia acumulada em 25 anos</span>
+          <strong data-out="total"></strong>
+        </div>
+        <svg data-chart viewBox="0 0 600 220" preserveAspectRatio="none" role="img" aria-label="Gráfico da economia acumulada ano a ano"></svg>
+        <div class="sim-legenda">
+          <span><i class="lg-a"></i>Pagando o investimento</span>
+          <span><i class="lg-b"></i>Economia depois do retorno</span>
+          <span><i class="lg-c"></i>Investimento estimado: <b data-out="invmedio"></b></span>
+        </div>
+      </div>
+      <p class="sim-nota">Estimativa com base na tarifa média do Pará e na geração média das placas na região. O valor final depende da visita técnica, do telhado e dos equipamentos escolhidos. A economia começa depois da homologação pela distribuidora.</p>
+      <div class="sim-acoes">
+        <a class="btn-primary sim-btn" data-whatsapp href={WHATSAPP_URL} target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d={WHATSAPP_ICON_PATH}/></svg>
+          <span>Falar com um especialista</span>
+        </a>
+        <button class="sim-voltar" type="button" data-voltar>Refazer simulação</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #simulador { padding: 90px 24px; }
+  .sim-box {
+    max-width: 820px; margin: 0 auto;
+    padding: 44px 40px;
+    scroll-margin-top: 100px;
+    border: 1px solid rgba(155,89,208,0.35);
+    border-radius: 12px;
+    background:
+      radial-gradient(ellipse 70% 80% at 50% 0%, rgba(107,47,160,0.18) 0%, transparent 70%),
+      rgba(19,8,37,0.85);
+  }
+  .sim-step[hidden] { display: none; }
+  .sim-entrada { display: grid; gap: 26px; }
+  .sim-field { display: grid; gap: 10px; border: 0; min-width: 0; }
+  .sim-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(192,132,252,0.85);
+  }
+  input[type="text"], input[type="tel"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: rgba(10,5,20,0.6);
+    color: var(--silver-bright);
+    font-family: 'Exo 2', sans-serif; font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input[type="text"]:focus, input[type="tel"]:focus {
+    border-color: var(--purple-glow);
+    box-shadow: 0 0 0 3px rgba(155,89,208,0.25);
+  }
+  .sim-money { display: flex; align-items: center; gap: 12px; }
+  .sim-money > span {
+    font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--purple-glow);
+  }
+  .sim-money input {
+    font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.04em;
+    padding: 8px 16px;
+  }
+  .sim-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .sim-chip input { position: absolute; opacity: 0; pointer-events: none; }
+  .sim-chip span {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid rgba(155,89,208,0.4);
+    border-radius: 40px;
+    background: rgba(107,47,160,0.12);
+    font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(220,210,240,0.9);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sim-chip input:checked + span {
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+    border-color: var(--purple-glow);
+    color: var(--white);
+  }
+  .sim-chip input:focus-visible + span { box-shadow: 0 0 0 3px rgba(192,132,252,0.5); }
+  .sim-btn { justify-self: start; border: 0; cursor: pointer; }
+
+  .sim-cards {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    background: var(--border);
+  }
+  .sim-card { padding: 26px 18px; background: rgba(19,8,37,0.95); text-align: center; }
+  .sim-card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1;
+    background: linear-gradient(135deg, #d0a0ff, #f0e0ff);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .sim-card-num--sm { font-size: clamp(1.5rem, 3.6vw, 2rem); }
+  .sim-card-label {
+    margin-top: 8px;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(192,132,252,0.7);
+  }
+
+  .sim-lead { margin-top: 32px; display: grid; gap: 20px; }
+  .sim-lead-title { font-size: 1rem; font-weight: 300; line-height: 1.6; color: var(--silver-bright); }
+  .sim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .sim-full { grid-column: 1 / -1; }
+  .sim-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .sim-lgpd {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 0.85rem; font-weight: 300; line-height: 1.55; color: rgba(200,200,224,0.75);
+  }
+  .sim-lgpd input { margin-top: 3px; width: 18px; height: 18px; accent-color: #7c3aed; flex-shrink: 0; }
+  .sim-lgpd a { color: var(--purple-glow); }
+  .sim-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+  .sim-voltar {
+    background: none; border: 0; cursor: pointer;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(192,132,252,0.75);
+    text-decoration: underline; text-underline-offset: 4px;
+  }
+  .sim-erro { color: #fca5a5; font-size: 0.9rem; }
+  .sim-aviso {
+    margin-bottom: 20px; padding: 12px 16px; border-radius: 6px;
+    border: 1px solid rgba(252,165,165,0.4); background: rgba(127,29,29,0.25);
+    color: #fecaca; font-size: 0.9rem; line-height: 1.5;
+  }
+
+  .sim-chart {
+    margin-top: 24px; padding: 22px 20px 16px;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: rgba(10,5,20,0.5);
+  }
+  .sim-chart-head {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 14px;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase; color: rgba(192,132,252,0.8);
+  }
+  .sim-chart-head strong {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; font-weight: 400; letter-spacing: 0.04em;
+    color: var(--silver-bright);
+  }
+  .sim-chart svg { width: 100%; height: 220px; display: block; overflow: visible; }
+  .sim-legenda {
+    margin-top: 12px; display: flex; flex-wrap: wrap; gap: 18px;
+    font-size: 0.8rem; color: rgba(200,200,224,0.7);
+  }
+  .sim-legenda span { display: inline-flex; align-items: center; gap: 8px; }
+  .sim-legenda i { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+  .lg-a { background: rgba(155,89,208,0.45); }
+  .lg-b { background: #c084fc; }
+  .lg-c { height: 0 !important; border-top: 2px dashed rgba(240,240,255,0.7); border-radius: 0 !important; }
+  .sim-legenda b { font-weight: 600; color: var(--silver-bright); }
+  .sim-nota { margin: 18px 0 26px; font-size: 0.8rem; font-weight: 300; line-height: 1.6; color: rgba(200,200,224,0.55); }
+
+  @media (max-width: 640px) {
+    .sim-box { padding: 30px 20px; }
+    .sim-cards { grid-template-columns: 1fr; }
+    .sim-grid { grid-template-columns: 1fr; }
+    .sim-btn { justify-self: stretch; }
+    .sim-acoes { flex-direction: column; align-items: stretch; }
+  }
+</style>
+
+<script>
+  type Config = {
+    tarifaKwh: number; potenciaPlacaW: number; geracaoPlacaKwhMes: number;
+    economiaMin: number; economiaMax: number;
+    investimentoKwpMin: number; investimentoKwpMax: number;
+    degradacaoAnual: number; reajusteTarifaAnual: number; anos: number;
+    endpoint: string; whatsapp: string;
+  };
+
+  const box = document.querySelector<HTMLElement>('.sim-box');
+  if (box) iniciar(box);
+
+  function iniciar(box: HTMLElement) {
+    const cfg: Config = JSON.parse(box.dataset.config!);
+    const entrada = box.querySelector<HTMLFormElement>('.sim-entrada')!;
+    const resumo = box.querySelector<HTMLElement>('.sim-resumo')!;
+    const leadForm = box.querySelector<HTMLFormElement>('.sim-lead')!;
+    const completo = box.querySelector<HTMLElement>('.sim-completo')!;
+    const brl = (v: number, dec = 0) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: dec, maximumFractionDigits: dec });
+    const num = (v: number, dec = 0) => v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    const out = (k: string, v: string) => box.querySelectorAll(`[data-out="${k}"]`).forEach(e => (e.textContent = v));
+    const mostrar = (el: HTMLElement) => {
+      [entrada, resumo, completo].forEach(s => (s.hidden = s !== el));
+      box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    const erro = (sel: string, msg: string) => {
+      const p = box.querySelector<HTMLElement>(sel)!;
+      p.textContent = msg; p.hidden = !msg;
+    };
+    let carregadoEm = Date.now();
+    let r: ReturnType<typeof calcular> | null = null;
+
+    function calcular(conta: number, tipo: string) {
+      const consumo = conta / cfg.tarifaKwh;
+      const placas = Math.max(1, Math.ceil(consumo / cfg.geracaoPlacaKwhMes));
+      const kwp = (placas * cfg.potenciaPlacaW) / 1000;
+      const ecoMin = conta * cfg.economiaMin;
+      const ecoMax = conta * cfg.economiaMax;
+      const ecoMedia = (ecoMin + ecoMax) / 2;
+      const invMin = kwp * cfg.investimentoKwpMin;
+      const invMax = kwp * cfg.investimentoKwpMax;
+      const retMin = invMin / (ecoMax * 12);
+      const retMax = invMax / (ecoMin * 12);
+      const acumulado: number[] = [];
+      let soma = 0;
+      for (let ano = 0; ano < cfg.anos; ano++) {
+        soma += ecoMedia * 12 * Math.pow(1 - cfg.degradacaoAnual, ano) * Math.pow(1 + cfg.reajusteTarifaAnual, ano);
+        acumulado.push(soma);
+      }
+      return { conta, tipo, consumo, placas, kwp, ecoMin, ecoMax, invMin, invMax, invMedio: (invMin + invMax) / 2, retMin, retMax, acumulado };
+    }
+
+    const anosTxt = (a: number) => num(a, 1).replace(',0', '');
+    // Mostra "X a Y" só quando os extremos diferem depois de formatados.
+    const faixa = (a: number, b: number, fmt: (v: number) => string, sufixo = '') => {
+      const fa = fmt(a), fb = fmt(b);
+      return (fa === fb ? fa : `${fa} a ${fb}`) + sufixo;
+    };
+
+    entrada.addEventListener('submit', e => {
+      e.preventDefault();
+      const bruto = (entrada.elements.namedItem('conta') as HTMLInputElement).value;
+      const conta = Number(bruto.replace(/[^\d,.]/g, '').replace(/\.(?=\d{3}(\D|$))/g, '').replace(',', '.'));
+      if (!conta || conta < 50 || conta > 200000) {
+        erro('[data-erro-entrada]', 'Informe o valor médio da conta em reais (a partir de R$ 50).');
+        return;
+      }
+      erro('[data-erro-entrada]', '');
+      const tipo = (entrada.querySelector<HTMLInputElement>('input[name="tipo"]:checked'))!.value;
+      r = calcular(conta, tipo);
+      out('economia', faixa(r.ecoMin, r.ecoMax, v => brl(v)));
+      out('placas', String(r.placas));
+      out('potencia', String(cfg.potenciaPlacaW));
+      out('consumo', `${num(r.consumo)} kWh`);
+      carregadoEm = Date.now();
+      mostrar(resumo);
+    });
+
+    box.querySelectorAll('[data-voltar]').forEach(b => b.addEventListener('click', () => mostrar(entrada)));
+
+    leadForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!r) return;
+      const f = leadForm.elements;
+      const val = (n: string) => (f.namedItem(n) as HTMLInputElement).value.trim();
+      const telefone = val('telefone').replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '');
+      if (val('nome').length < 2) return erro('[data-erro-lead]', 'Informe seu nome.');
+      if (!/^\d{10,11}$/.test(telefone)) return erro('[data-erro-lead]', 'Informe um WhatsApp com DDD.');
+      if (val('local').length < 2) return erro('[data-erro-lead]', 'Informe o bairro e a cidade.');
+      if (!(f.namedItem('lgpd') as HTMLInputElement).checked) return erro('[data-erro-lead]', 'Para continuar, aceite o uso dos dados.');
+      erro('[data-erro-lead]', '');
+
+      const btn = leadForm.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      btn.disabled = true;
+      let falhou = false;
+      try {
+        const resp = await fetch(cfg.endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome: val('nome'), telefone, local: val('local'), lgpd: true,
+            empresa: val('empresa'), tempo_ms: Date.now() - carregadoEm,
+            conta: r.conta, tipo: r.tipo, consumo_kwh: Math.round(r.consumo),
+            placas: r.placas, kwp: r.kwp,
+          }),
+        });
+        falhou = !resp.ok;
+      } catch {
+        falhou = true;
+      } finally {
+        btn.disabled = false;
+      }
+
+      const aviso = box.querySelector<HTMLElement>('[data-aviso]')!;
+      aviso.hidden = !falhou;
+      aviso.textContent = falhou ? 'Não conseguimos registrar seus dados agora. Fale com a gente pelo WhatsApp abaixo para receber a proposta.' : '';
+
+      out('kwp', `${num(r.kwp, 2)} kWp`);
+      out('investimento', faixa(r.invMin, r.invMax, v => brl(v)));
+      out('retorno', faixa(r.retMin, r.retMax, anosTxt, ' anos'));
+      out('total', brl(r.acumulado[r.acumulado.length - 1]));
+      out('invmedio', brl(r.invMedio));
+      desenharGrafico(r.acumulado, r.invMedio);
+
+      const tipoLabel = box.querySelector<HTMLInputElement>(`input[name="tipo"][value="${r.tipo}"]`)!.nextElementSibling!.textContent;
+      const msg = `Olá! Sou ${val('nome')} (${val('local')}). Simulei no site: conta de ${brl(r.conta)} (${tipoLabel?.toLowerCase()}), ` +
+        `${r.placas} placas de ${cfg.potenciaPlacaW} W (${num(r.kwp, 2)} kWp), economia de ${faixa(r.ecoMin, r.ecoMax, v => brl(v))} por mês. Quero uma proposta.`;
+      box.querySelector<HTMLAnchorElement>('[data-whatsapp]')!.href = `${cfg.whatsapp}?text=${encodeURIComponent(msg)}`;
+      mostrar(completo);
+    });
+
+    function desenharGrafico(valores: number[], investimento: number) {
+      const svg = box.querySelector<SVGSVGElement>('[data-chart]')!;
+      const W = 600, H = 220, base = H - 22, topo = 10;
+      const max = Math.max(valores[valores.length - 1], investimento) * 1.05;
+      const y = (v: number) => base - (v / max) * (base - topo);
+      const passo = W / valores.length;
+      const larg = passo * 0.68;
+      const ns = 'http://www.w3.org/2000/svg';
+      svg.replaceChildren();
+      const el = (tag: string, attrs: Record<string, string | number>, texto?: string) => {
+        const n = document.createElementNS(ns, tag);
+        Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, String(v)));
+        if (texto) n.textContent = texto;
+        svg.appendChild(n);
+        return n;
+      };
+      valores.forEach((v, i) => {
+        const x = i * passo + (passo - larg) / 2;
+        el('rect', { x, y: y(v), width: larg, height: base - y(v), rx: 2, fill: v >= investimento ? '#c084fc' : 'rgba(155,89,208,0.45)' });
+        if (i === 0 || (i + 1) % 5 === 0) {
+          el('text', { x: x + larg / 2, y: H - 4, 'text-anchor': 'middle', 'font-size': 11, fill: 'rgba(200,200,224,0.6)' }, `${i + 1}º`);
+        }
+      });
+      el('line', { x1: 0, x2: W, y1: y(investimento), y2: y(investimento), stroke: 'rgba(240,240,255,0.7)', 'stroke-dasharray': '5 5', 'stroke-width': 1 });
+    }
+  }
+</script>

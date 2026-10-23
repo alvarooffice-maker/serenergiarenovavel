@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import Background from '../components/Background.astro';
+import WhatsAppFab from '../components/WhatsAppFab.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Stats from '../components/Stats.astro';
+import Services from '../components/Services.astro';
+import Differentials from '../components/Differentials.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import Simulator from '../components/Simulator.astro';
+import SocialProof from '../components/SocialProof.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { FAQ } from '../data/faq';
+import Footer from '../components/Footer.astro';
+---
+
+<Base>
+  <Background />
+  <WhatsAppFab />
+
+  <div class="page">
+    <Nav />
+    <Hero />
+    <div class="section-divider"></div>
+    <Stats />
+    <div class="section-divider"></div>
+    <Services />
+    <div class="section-divider"></div>
+    <Simulator />
+    <div class="section-divider"></div>
+    <SocialProof />
+    <Differentials />
+    <div class="section-divider"></div>
+    <HowItWorks />
+    <div class="section-divider"></div>
+    <Faq perguntas={FAQ} />
+    <div class="section-divider"></div>
+    <CtaBand />
+    <Footer />
+  </div>
+</Base>

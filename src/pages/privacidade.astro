@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+import Background from '../components/Background.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { EMAIL, TELEFONE, CNPJ, RAZAO_SOCIAL } from '../data/site';
+
+// TODO(Álvaro): revisar este texto (de preferência com o contador/advogado).
+const atualizado = '23 de outubro de 2026';
+---
+
+<Base title="Política de Privacidade | SER Energia Renovável" description="Como a SER Energia Renovável coleta, usa e protege os seus dados pessoais, conforme a LGPD.">
+  <Background />
+  <div class="page">
+    <Nav />
+    <article class="legal">
+      <p class="sec-eyebrow">LGPD</p>
+      <h1 class="sec-title">Política de Privacidade</h1>
+      <p class="legal-data">Atualizada em {atualizado}.</p>
+
+      <h2>1. Quem somos</h2>
+      <p>
+        SER Energia Renovável ({RAZAO_SOCIAL}, CNPJ {CNPJ}), com atuação em Belém/PA e região, é a controladora dos dados pessoais
+        tratados neste site, nos termos da Lei nº 13.709/2018 (Lei Geral de Proteção de Dados, LGPD).
+      </p>
+
+      <h2>2. Quais dados coletamos</h2>
+      <ul>
+        <li><strong>No simulador de economia:</strong> nome, número de WhatsApp, bairro e cidade, valor médio da conta de luz, tipo de imóvel e o resultado da simulação.</li>
+        <li><strong>Quando você fala com a gente pelo WhatsApp, telefone ou e-mail:</strong> os dados que você mesmo informar na conversa.</li>
+        <li><strong>Conteúdos de terceiros:</strong> vídeos do Instagram incorporados ao site e as fontes do Google Fonts podem registrar informações técnicas do seu acesso (como endereço IP e navegador), de acordo com as políticas dessas empresas.</li>
+      </ul>
+      <p>Este site não usa cookies próprios de rastreamento ou publicidade.</p>
+
+      <h2>3. Para que usamos os dados</h2>
+      <ul>
+        <li>Entrar em contato sobre a sua simulação e enviar proposta de energia solar;</li>
+        <li>Agendar visita técnica e dar andamento ao atendimento, caso você queira seguir;</li>
+        <li>Cumprir obrigações legais e regulatórias.</li>
+      </ul>
+      <p>A base legal é o seu consentimento (art. 7º, I, da LGPD), dado ao marcar a caixa de autorização do simulador, e, quando houver contratação, a execução do contrato (art. 7º, V).</p>
+
+      <h2>4. Com quem compartilhamos</h2>
+      <p>
+        Não vendemos nem alugamos seus dados. Eles ficam armazenados no nosso sistema de gestão de clientes, hospedado em provedor de
+        nuvem (Supabase), que atua como operador. Podemos compartilhar dados com a distribuidora de energia, instituições financeiras
+        ou parceiros técnicos somente quando for necessário para o serviço que você contratar ou solicitar.
+      </p>
+
+      <h2>5. Por quanto tempo guardamos</h2>
+      <p>
+        Mantemos os dados enquanto houver relacionamento comercial ou interesse no atendimento, e pelo prazo exigido por lei após o fim
+        dele. Você pode pedir a exclusão a qualquer momento, exceto quando a lei exigir a guarda.
+      </p>
+
+      <h2>6. Seus direitos</h2>
+      <p>
+        Você pode, a qualquer momento: confirmar se tratamos seus dados, acessá-los, corrigi-los, pedir a anonimização, o bloqueio ou a
+        exclusão, pedir a portabilidade, saber com quem compartilhamos e revogar o consentimento.
+      </p>
+
+      <h2>7. Segurança</h2>
+      <p>Adotamos medidas técnicas e administrativas para proteger os dados contra acesso não autorizado, perda ou alteração, como controle de acesso por usuário e conexão criptografada.</p>
+
+      <h2>8. Contato</h2>
+      <p>
+        Para exercer seus direitos ou tirar dúvidas sobre esta política, fale com a gente pelo e-mail
+        <a href={`mailto:${EMAIL}`}>{EMAIL}</a> ou pelo WhatsApp {TELEFONE}.
+      </p>
+    </article>
+    <Footer />
+  </div>
+</Base>
+
+<style>
+  .legal { max-width: 760px; margin: 0 auto; padding: 140px 24px 90px; }
+  .legal-data { margin: 12px 0 36px; font-size: 0.85rem; color: rgba(200,200,224,0.55); }
+  .legal h2 {
+    margin: 34px 0 12px;
+    font-family: 'Rajdhani', sans-serif; font-size: 1.15rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--silver-bright);
+  }
+  .legal p, .legal li { font-size: 0.97rem; font-weight: 300; line-height: 1.75; color: rgba(200,200,224,0.78); }
+  .legal p + p { margin-top: 12px; }
+  .legal ul { margin: 8px 0 12px; padding-left: 20px; display: grid; gap: 8px; }
+  .legal strong { color: var(--silver-bright); font-weight: 600; }
+  .legal a { color: var(--purple-glow); }
+</style>

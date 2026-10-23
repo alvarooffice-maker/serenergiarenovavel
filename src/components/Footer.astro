@@ -1,0 +1,80 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/ser_logo.jpg';
+import { PRODUTOS } from '../data/produtos';
+import { INSTAGRAM_URL, INSTAGRAM_HANDLE, EMAIL, TELEFONE, WHATSAPP_URL, CNPJ, RAZAO_SOCIAL } from '../data/site';
+
+const ano = new Date().getFullYear();
+---
+
+<footer>
+  <div class="footer-cols">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <Image src={logo} alt="SER Energia Renovável" width={36} densities={[1, 2]} />
+      </div>
+      <p>Energia solar residencial, comercial e rural em Belém/PA e região.</p>
+    </div>
+    <div>
+      <p class="footer-title">Soluções</p>
+      <ul>
+        {PRODUTOS.map((p) => <li><a href={`/solucoes/${p.slug}/`}>{p.titulo}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <p class="footer-title">Site</p>
+      <ul>
+        <li><a href="/#simulador">Simulador de economia</a></li>
+        <li><a href="/#como-funciona">Como funciona</a></li>
+        <li><a href="/#faq">Perguntas frequentes</a></li>
+        <li><a href="/privacidade/">Política de Privacidade</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-title">Contato</p>
+      <ul>
+        <li><a href={WHATSAPP_URL} target="_blank" rel="noopener">WhatsApp {TELEFONE}</a></li>
+        <li><a href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
+        <li><a href={INSTAGRAM_URL} target="_blank" rel="noopener">Instagram {INSTAGRAM_HANDLE}</a></li>
+        <li>Belém/PA e região</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-copy">© {ano} SER ENERGIA RENOVÁVEL · {RAZAO_SOCIAL} · CNPJ {CNPJ} · Todos os direitos reservados</div>
+</footer>
+
+<style>
+  footer {
+    padding:48px 40px 32px;
+    border-top:1px solid rgba(155,89,208,0.15);
+  }
+  .footer-cols {
+    max-width: 1080px; margin: 0 auto 36px;
+    display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 32px;
+  }
+  .footer-brand p { margin-top: 14px; font-size: 0.85rem; font-weight: 300; line-height: 1.6; color: rgba(200,200,224,0.6); max-width: 240px; }
+  .footer-logo img { height:36px; width:auto; filter:drop-shadow(0 0 8px rgba(155,89,208,0.35)); opacity:0.8; }
+  .footer-title {
+    margin-bottom: 14px;
+    font-family:'Rajdhani',sans-serif; font-size:0.8rem; font-weight:700;
+    letter-spacing:0.2em; text-transform:uppercase; color: rgba(192,132,252,0.8);
+  }
+  ul { list-style: none; display: grid; gap: 9px; font-size: 0.85rem; font-weight: 300; color: rgba(200,200,224,0.6); }
+  a { color: rgba(200,200,224,0.7); text-decoration: none; transition: color 0.2s; word-break: break-word; }
+  a:hover { color: var(--purple-glow); }
+  .footer-copy {
+    max-width: 1080px; margin: 0 auto; padding-top: 24px;
+    border-top: 1px solid rgba(155,89,208,0.1);
+    font-size:0.78rem; letter-spacing:0.12em;
+    color:rgba(155,89,208,0.45);
+  }
+
+  @media(max-width:860px){
+    .footer-cols { grid-template-columns: 1fr 1fr; }
+  }
+  @media(max-width:640px){
+    footer { padding: 40px 20px 28px; }
+    .footer-cols { grid-template-columns: 1fr; }
+    .footer-copy { text-align:center; }
+  }
+</style>

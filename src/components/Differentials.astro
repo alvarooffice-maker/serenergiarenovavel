@@ -1,0 +1,57 @@
+---
+const items = [
+  { num: '+500', label: 'Sistemas Instalados', desc: 'Centenas de clientes satisfeitos em residências, comércios e propriedades rurais no Pará.' },
+  { num: '0', label: 'Burocracia para você', desc: 'Cuidamos de toda a documentação e acompanhamos a homologação junto à distribuidora até o sistema ser ligado.' },
+  { num: '+3', label: 'Anos de Experiência', desc: 'Equipe técnica qualificada, comprometida com qualidade, segurança e resultados reais.' },
+];
+---
+
+<section id="diferenciais">
+  <div class="sec-header reveal">
+    <p class="sec-eyebrow">Por que a SER?</p>
+    <h2 class="sec-title">Nossos Diferenciais</h2>
+  </div>
+  <div class="diff-grid">
+    {items.map((d, i) => (
+      <div class={`diff-card reveal reveal-delay-${i + 1}`}>
+        <div class="diff-num">{d.num}</div>
+        <div class="diff-label">{d.label}</div>
+        <div class="diff-desc">{d.desc}</div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  #diferenciais { padding: 90px 24px; }
+  .diff-grid {
+    max-width:900px; margin:0 auto;
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+    gap:20px;
+  }
+  .diff-card {
+    padding:36px 28px; text-align:center;
+    border:1px solid var(--border); border-radius:8px;
+    background:rgba(19,8,37,0.7);
+    transition:all 0.3s;
+  }
+  .diff-card:hover { border-color:rgba(155,89,208,0.5); background:rgba(107,47,160,0.1); transform:translateY(-3px); }
+  .diff-num {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:3.5rem; line-height:1;
+    background:linear-gradient(135deg,#d0a0ff,#f0d0ff);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .diff-label {
+    margin-top:8px;
+    font-family:'Rajdhani',sans-serif;
+    font-size:0.88rem; font-weight:600;
+    letter-spacing:0.15em; text-transform:uppercase;
+    color:rgba(192,132,252,0.75);
+  }
+  .diff-desc {
+    margin-top:14px;
+    font-size:0.88rem; font-weight:300; line-height:1.6;
+    color:rgba(200,200,224,0.6);
+  }
+</style>

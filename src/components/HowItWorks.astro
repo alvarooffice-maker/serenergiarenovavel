@@ -1,0 +1,71 @@
+---
+const steps = [
+  { title: 'Consultoria Gratuita', desc: 'Nossa equipe analisa sua conta de luz e perfil de consumo para dimensionar o sistema ideal para você — sem nenhum custo.' },
+  { title: 'Projeto e Proposta', desc: 'Elaboramos o projeto técnico completo com memorial de cálculo, layout e previsão de economia. Proposta clara e sem surpresas.' },
+  { title: 'Instalação', desc: 'Equipe técnica certificada realiza a instalação com segurança, organização e agilidade, respeitando seu imóvel.' },
+  { title: 'Homologação Expressa', desc: 'Cuidamos de toda a documentação e acompanhamos a aprovação junto à distribuidora. Você não precisa resolver nada.' },
+  { title: 'Economia Todo Mês', desc: 'Com o sistema homologado e ligado pela distribuidora, você passa a gerar a própria energia e a economia aparece nas contas seguintes. Monitoramento via app.' },
+];
+---
+
+<section id="como-funciona">
+  <div class="sec-header reveal">
+    <p class="sec-eyebrow">Processo</p>
+    <h2 class="sec-title">Como Funciona?</h2>
+    <p class="sec-sub">Do primeiro contato até você gerando sua própria energia — simples e sem burocracia.</p>
+  </div>
+  <div class="steps">
+    {steps.map((s, i) => (
+      <div class:list={['step', 'reveal', i > 0 && `reveal-delay-${i}`]}>
+        <div class="step-left"><div class="step-dot">{i + 1}</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <div class="step-title">{s.title}</div>
+          <div class="step-desc">{s.desc}</div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  #como-funciona { padding: 90px 24px; }
+  .steps {
+    max-width:800px; margin:0 auto;
+    display:flex; flex-direction:column; gap:0;
+  }
+  .step {
+    display:grid; grid-template-columns:60px 1fr;
+    gap:0 28px;
+    position:relative;
+  }
+  .step-left {
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .step-dot {
+    width:48px; height:48px; border-radius:50%;
+    background:linear-gradient(135deg,#7c3aed,#5b21b6);
+    border:2px solid rgba(155,89,208,0.5);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Bebas Neue',sans-serif; font-size:1.4rem;
+    color:var(--white);
+    box-shadow:0 0 24px rgba(107,47,160,0.5);
+    flex-shrink:0;
+  }
+  .step-line {
+    width:2px; flex:1; min-height:40px;
+    background:linear-gradient(to bottom,rgba(155,89,208,0.5),rgba(155,89,208,0.1));
+    margin:4px 0;
+  }
+  .step:last-child .step-line { display:none; }
+  .step-content { padding:0 0 48px; }
+  .step-title {
+    font-family:'Rajdhani',sans-serif;
+    font-size:1.1rem; font-weight:700;
+    letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--silver-bright); margin-bottom:8px; margin-top:10px;
+  }
+  .step-desc {
+    font-size:0.92rem; font-weight:300; line-height:1.65;
+    color:rgba(200,200,224,0.65);
+  }
+</style>

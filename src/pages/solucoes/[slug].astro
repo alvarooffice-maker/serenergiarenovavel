@@ -1,0 +1,159 @@
+---
+import Base from '../../layouts/Base.astro';
+import Background from '../../components/Background.astro';
+import WhatsAppFab from '../../components/WhatsAppFab.astro';
+import Nav from '../../components/Nav.astro';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Footer from '../../components/Footer.astro';
+import { PRODUTOS, type Produto } from '../../data/produtos';
+import { WHATSAPP_ICON_PATH, whatsappCom } from '../../data/site';
+
+export function getStaticPaths() {
+  return PRODUTOS.map((produto) => ({ params: { slug: produto.slug }, props: { produto } }));
+}
+
+const { produto } = Astro.props as { produto: Produto };
+const outros = PRODUTOS.filter((p) => p.slug !== produto.slug);
+---
+
+<Base title={`${produto.titulo} | SER Energia Renovável`} description={`${produto.chamada} ${produto.resumo}`}>
+  <Background />
+  <WhatsAppFab />
+
+  <div class="page">
+    <Nav />
+
+    <section class="prod-hero">
+      <nav class="crumbs" aria-label="Você está em">
+        <a href="/">Início</a> <span>/</span> <a href="/#servicos">Soluções</a> <span>/</span> <span>{produto.titulo}</span>
+      </nav>
+      <div class="prod-icon"><svg viewBox="0 0 24 24" set:html={produto.icone} /></div>
+      <p class="sec-eyebrow">Soluções SER</p>
+      <h1 class="prod-title">{produto.titulo}</h1>
+      <p class="prod-chamada">{produto.chamada}</p>
+      <div class="prod-btns">
+        <a class="btn-primary" href={whatsappCom(produto.whatsapp)} target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d={WHATSAPP_ICON_PATH}/></svg>
+          <span>Falar sobre {produto.titulo}</span>
+        </a>
+        <a class="btn-secondary" href="/#simulador">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 8 16 12 12 16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Simular Economia
+        </a>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="prod-body">
+      <div class="prod-texto reveal">
+        <h2 class="sec-title prod-h2">Como funciona</h2>
+        {produto.explicacao.map((p) => <p>{p}</p>)}
+      </div>
+      <div class="prod-cols">
+        <div class="prod-box reveal reveal-delay-1">
+          <h3>Indicado para</h3>
+          <ul>{produto.indicado.map((i) => <li>{i}</li>)}</ul>
+        </div>
+        <div class="prod-box reveal reveal-delay-2">
+          <h3>O que a SER faz</h3>
+          <ol>{produto.inclui.map((i) => <li>{i}</li>)}</ol>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+    <Faq perguntas={produto.faq} titulo={`Dúvidas sobre ${produto.titulo}`} />
+    <div class="section-divider"></div>
+    <CtaBand mensagem={produto.whatsapp} />
+
+    <section class="prod-outros">
+      <p class="sec-eyebrow">Outras soluções</p>
+      <div class="prod-outros-list">
+        {outros.map((p) => <a href={`/solucoes/${p.slug}/`}>{p.titulo}</a>)}
+      </div>
+    </section>
+
+    <Footer />
+  </div>
+</Base>
+
+<style>
+  .prod-hero {
+    padding: 140px 24px 80px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .crumbs {
+    margin-bottom: 36px;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: rgba(200,200,224,0.5);
+  }
+  .crumbs a { color: rgba(192,132,252,0.8); text-decoration: none; }
+  .crumbs span { margin: 0 4px; }
+  .prod-icon {
+    width: 72px; height: 72px; border-radius: 16px; margin-bottom: 26px;
+    background: linear-gradient(135deg, rgba(107,47,160,0.5), rgba(75,26,138,0.25));
+    border: 1px solid rgba(155,89,208,0.4);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 40px rgba(155,89,208,0.3);
+  }
+  .prod-icon svg { width: 36px; height: 36px; stroke: var(--purple-glow); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .prod-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 8vw, 5.5rem); line-height: 0.95; letter-spacing: 0.03em;
+    color: var(--silver-bright); text-shadow: 0 0 80px rgba(192,132,252,0.4);
+  }
+  .prod-chamada {
+    margin-top: 20px; max-width: 600px;
+    font-size: clamp(1rem, 2.2vw, 1.15rem); font-weight: 300; line-height: 1.7;
+    color: rgba(200,200,224,0.8);
+  }
+  .prod-btns { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
+
+  .prod-body { padding: 90px 24px; max-width: 900px; margin: 0 auto; }
+  .prod-h2 { margin-bottom: 22px; }
+  .prod-texto p { font-size: 1.02rem; font-weight: 300; line-height: 1.8; color: rgba(200,200,224,0.78); margin-bottom: 18px; }
+  .prod-cols { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .prod-box {
+    padding: 30px 28px; border: 1px solid var(--border); border-radius: 8px; background: rgba(19,8,37,0.7);
+  }
+  .prod-box h3 {
+    margin-bottom: 18px;
+    font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--silver-bright);
+  }
+  .prod-box ul, .prod-box ol { display: grid; gap: 12px; padding-left: 0; list-style: none; counter-reset: passo; }
+  .prod-box li {
+    position: relative; padding-left: 30px;
+    font-size: 0.92rem; font-weight: 300; line-height: 1.55; color: rgba(200,200,224,0.75);
+  }
+  .prod-box ul li::before {
+    content: ''; position: absolute; left: 4px; top: 7px; width: 10px; height: 10px; border-radius: 50%;
+    background: linear-gradient(135deg, #c084fc, #7c3aed);
+  }
+  .prod-box ol li { counter-increment: passo; }
+  .prod-box ol li::before {
+    content: counter(passo); position: absolute; left: 0; top: 0;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+    font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem; line-height: 20px; text-align: center; color: #fff;
+  }
+
+  .prod-outros { padding: 0 24px 80px; text-align: center; }
+  .prod-outros-list { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .prod-outros-list a {
+    padding: 9px 18px; border-radius: 40px;
+    border: 1px solid rgba(155,89,208,0.4); background: rgba(107,47,160,0.15);
+    font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; color: rgba(220,210,240,0.9); text-decoration: none;
+    transition: all 0.2s;
+  }
+  .prod-outros-list a:hover { border-color: var(--purple-glow); background: rgba(155,89,208,0.25); }
+
+  @media (max-width: 640px) {
+    .prod-cols { grid-template-columns: 1fr; }
+    .prod-btns { flex-direction: column; align-items: center; }
+  }
+</style>

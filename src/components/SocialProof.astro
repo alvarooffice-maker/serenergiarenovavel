@@ -1,0 +1,170 @@
+---
+import { REELS_CLIENTES as REELS, INSTALACOES, VIDEO_DRONE, AVALIACOES, MARCAS, GOOGLE_PERFIL_URL, GOOGLE_AVALIAR_URL } from '../data/prova-social';
+import { INSTAGRAM_URL, INSTAGRAM_HANDLE } from '../data/site';
+
+// Blocos vazios não aparecem no site publicado; no `npm run dev` aparecem como lembrete.
+const dev = import.meta.env.DEV;
+const temAlgo = REELS.length || INSTALACOES.length || AVALIACOES.length || MARCAS.length;
+---
+
+{(temAlgo || dev) && (
+  <section id="clientes">
+    <div class="sec-header reveal">
+      <p class="sec-eyebrow">Prova social</p>
+      <h2 class="sec-title">Clientes reais da SER</h2>
+      <p class="sec-sub">Quem já gera a própria energia conta como foi.</p>
+    </div>
+
+    {REELS.length > 0 ? (
+      <div class="reels" data-reels>
+        {REELS.map((url) => (
+          <div class="reel">
+            <blockquote class="instagram-media" data-instgrm-permalink={url} data-instgrm-version="14">
+              <a href={url} target="_blank" rel="noopener">Ver no Instagram</a>
+            </blockquote>
+          </div>
+        ))}
+      </div>
+    ) : dev && (
+      <div class="todo">TODO: colar as URLs dos Reels de clientes em <code>src/data/prova-social.ts</code> (REELS_CLIENTES).</div>
+    )}
+
+    {INSTALACOES.length > 0 && (
+      <div class="fotos">
+        {VIDEO_DRONE && (
+          <figure class="foto foto--video reveal">
+            <video data-lazy-video muted loop playsinline preload="none" poster={VIDEO_DRONE.poster} aria-label="Vídeo de drone de uma instalação da SER em Belém">
+              <source data-src={VIDEO_DRONE.src} type="video/mp4" />
+            </video>
+            <figcaption>Instalação da SER vista de drone, em Belém</figcaption>
+          </figure>
+        )}
+        {INSTALACOES.map((f) => (
+          <figure class="foto reveal">
+            <img src={f.foto} alt={f.legenda} loading="lazy" decoding="async" />
+            <figcaption>
+              {f.kwp && <strong>{Number(f.kwp).toLocaleString('pt-BR')} kWp · </strong>}
+              {f.bairro || f.legenda}
+              {dev && (!f.bairro || !f.kwp) && <span class="todo-inline"> TODO: bairro e kWp</span>}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    )}
+
+    {AVALIACOES.length > 0 ? (
+      <div class="avaliacoes">
+        {AVALIACOES.map((a) => (
+          <blockquote class="avaliacao reveal">
+            <div class="estrelas" aria-label={`${a.nota} de 5 estrelas`}>{'★'.repeat(a.nota)}{'☆'.repeat(5 - a.nota)}</div>
+            <p>{a.texto}</p>
+            <footer>{a.nome}{a.data && ` · ${a.data}`} · Google</footer>
+          </blockquote>
+        ))}
+        {GOOGLE_PERFIL_URL && <a class="link-google" href={GOOGLE_PERFIL_URL} target="_blank" rel="noopener">Ver todas as avaliações no Google</a>}
+      </div>
+    ) : dev && (
+      <div class="todo">TODO: avaliações reais do Google em <code>AVALIACOES</code> e link do perfil em <code>GOOGLE_PERFIL_URL</code>.</div>
+    )}
+
+    {MARCAS.length > 0 ? (
+      <div class="marcas">
+        {MARCAS.map((m) => (
+          <div class="marca reveal">
+            <div class="marca-nome">{m.marca}</div>
+            <div class="marca-item">{m.item}</div>
+            <div class="marca-garantia">{m.garantia}</div>
+          </div>
+        ))}
+      </div>
+    ) : dev && (
+      <div class="todo">TODO: marcas dos equipamentos e garantias em <code>MARCAS</code>.</div>
+    )}
+
+    {GOOGLE_AVALIAR_URL && (
+      <div class="avaliar reveal">
+        <p>Já é cliente da SER? Conte como está a sua economia.</p>
+        <a class="btn-primary" href={GOOGLE_AVALIAR_URL} target="_blank" rel="noopener"><span>★ Avalie a SER no Google</span></a>
+      </div>
+    )}
+
+    <p class="insta reveal">
+      Veja mais instalações no Instagram: <a href={INSTAGRAM_URL} target="_blank" rel="noopener">{INSTAGRAM_HANDLE}</a>
+    </p>
+  </section>
+)}
+
+<style>
+  #clientes { padding: 90px 24px; }
+  .reels, .fotos, .avaliacoes, .marcas, .todo { max-width: 1080px; margin: 0 auto 28px; }
+  .reels { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+  .reel { flex: 1 1 300px; max-width: 340px; min-height: 480px; }
+  .reel :global(.instagram-media) { min-width: 0 !important; width: 100% !important; margin: 0 !important; }
+  .fotos { display: grid; gap: 16px; grid-template-columns: repeat(4, 1fr); align-items: start; }
+  .foto { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: rgba(19,8,37,0.7); }
+  .foto img, .foto video { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: #000; }
+  .foto--video { grid-column: span 2; }
+  .foto--video video { aspect-ratio: 16 / 9; }
+  .todo-inline { color: #fde68a; font-size: 0.75rem; }
+  .foto figcaption { padding: 12px 16px; font-size: 0.85rem; color: rgba(200,200,224,0.75); }
+  .foto strong { color: var(--silver-bright); font-family: 'Rajdhani', sans-serif; letter-spacing: 0.08em; }
+  .avaliacoes { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .avaliacao {
+    padding: 24px; border: 1px solid var(--border); border-radius: 8px; background: rgba(19,8,37,0.7);
+    font-size: 0.92rem; font-weight: 300; line-height: 1.6; color: rgba(200,200,224,0.8);
+  }
+  .estrelas { color: #fbbf24; letter-spacing: 0.15em; margin-bottom: 10px; }
+  .avaliacao footer { margin-top: 12px; font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 0.1em; color: rgba(192,132,252,0.8); }
+  .link-google { grid-column: 1 / -1; justify-self: center; color: var(--purple-glow); font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.85rem; }
+  .marcas { display: grid; gap: 2px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--border); }
+  .marca { padding: 24px; background: rgba(19,8,37,0.9); text-align: center; }
+  .marca-nome { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--silver-bright); }
+  .marca-item { font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; font-size: 0.8rem; color: rgba(192,132,252,0.75); }
+  .marca-garantia { margin-top: 8px; font-size: 0.85rem; font-weight: 300; color: rgba(200,200,224,0.7); }
+  .todo {
+    padding: 22px; border: 2px dashed rgba(251,191,36,0.6); border-radius: 8px;
+    color: #fde68a; font-size: 0.9rem; text-align: center; background: rgba(120,80,0,0.12);
+  }
+  .todo code { color: #fff; }
+  @media (max-width: 860px) {
+    .fotos { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .fotos { grid-template-columns: 1fr; }
+    .foto--video { grid-column: auto; }
+  }
+  .avaliar { max-width: 1080px; margin: 0 auto 28px; text-align: center; }
+  .avaliar p { margin-bottom: 14px; font-size: 0.95rem; font-weight: 300; color: rgba(200,200,224,0.75); }
+  .insta { text-align: center; font-size: 0.95rem; font-weight: 300; color: rgba(200,200,224,0.75); }
+  .insta a { color: var(--purple-glow); font-weight: 600; }
+</style>
+
+<script>
+  // Só carrega o script de incorporação do Instagram quando a seção estiver perto da tela.
+  const reels = document.querySelector('[data-reels]');
+  if (reels) {
+    const io = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      const s = document.createElement('script');
+      s.src = 'https://www.instagram.com/embed.js';
+      s.async = true;
+      document.body.appendChild(s);
+    }, { rootMargin: '400px' });
+    io.observe(reels);
+  }
+
+  // Vídeo de drone: só baixa e toca quando aparece na tela; pausa ao sair.
+  document.querySelectorAll<HTMLVideoElement>('[data-lazy-video]').forEach((v) => {
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        const s = v.querySelector<HTMLSourceElement>('source[data-src]');
+        if (s) { s.src = s.dataset.src!; s.removeAttribute('data-src'); v.load(); }
+        v.play().catch(() => {});
+      } else {
+        v.pause();
+      }
+    }, { threshold: 0.25 });
+    io.observe(v);
+  });
+</script>

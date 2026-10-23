@@ -1,0 +1,155 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/ser_logo.jpg';
+import { WHATSAPP_URL, WHATSAPP_ICON_PATH, INSTAGRAM_URL, INSTAGRAM_HANDLE } from '../data/site';
+import { REELS_CLIENTES, INSTALACOES, AVALIACOES, MARCAS } from '../data/prova-social';
+import { PRODUTOS } from '../data/produtos';
+
+const temClientes = import.meta.env.DEV || REELS_CLIENTES.length || INSTALACOES.length || AVALIACOES.length || MARCAS.length;
+const links = [
+  { href: '/#simulador', label: 'Simulador' },
+  ...(temClientes ? [{ href: '/#clientes', label: 'Clientes' }] : []),
+  { href: '/#como-funciona', label: 'Como funciona' },
+  { href: '/#faq', label: 'Dúvidas' },
+];
+const instagramIcon = '<rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>';
+---
+
+<nav>
+  <a class="nav-logo" href="/#hero">
+    <Image src={logo} alt="SER Energia Renovável" width={36} densities={[1, 2]} loading="eager" />
+  </a>
+
+  <ul class="nav-links">
+    <li class="nav-drop">
+      <a href="/#servicos">Soluções</a>
+      <ul class="nav-sub">
+        {PRODUTOS.map((p) => <li><a href={`/solucoes/${p.slug}/`}>{p.titulo}</a></li>)}
+      </ul>
+    </li>
+    {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+  </ul>
+
+  <div class="nav-right">
+    <a class="nav-insta" href={INSTAGRAM_URL} target="_blank" rel="noopener" aria-label={`Instagram ${INSTAGRAM_HANDLE}`}>
+      <svg viewBox="0 0 24 24" set:html={instagramIcon} />
+    </a>
+    <a class="nav-cta" href={WHATSAPP_URL} target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d={WHATSAPP_ICON_PATH}/></svg>
+      <span>Orçamento Grátis</span>
+    </a>
+    <details class="nav-mobile">
+      <summary aria-label="Abrir menu"><span></span><span></span><span></span></summary>
+      <div class="nav-panel">
+        <a href="/#servicos">Soluções</a>
+        {PRODUTOS.map((p) => <a class="nav-panel-sub" href={`/solucoes/${p.slug}/`}>{p.titulo}</a>)}
+        {links.map((l) => <a href={l.href}>{l.label}</a>)}
+        <a href={INSTAGRAM_URL} target="_blank" rel="noopener">Instagram {INSTAGRAM_HANDLE}</a>
+      </div>
+    </details>
+  </div>
+</nav>
+
+<style>
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    padding: 16px 40px;
+    display: flex; align-items:center; justify-content:space-between; gap: 24px;
+    background: linear-gradient(to bottom, rgba(10,5,20,0.9) 0%, transparent 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .nav-logo img { height: 36px; width:auto; filter: drop-shadow(0 0 12px rgba(155,89,208,0.5)); }
+
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a, .nav-panel a {
+    font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(220,210,240,0.85); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--purple-glow); }
+  .nav-drop { position: relative; }
+  .nav-sub {
+    position: absolute; top: 100%; left: -18px; padding-top: 14px;
+    list-style: none; min-width: 260px;
+    opacity: 0; visibility: hidden; transform: translateY(-4px);
+    transition: all 0.2s;
+  }
+  .nav-sub::before {
+    content: ''; position: absolute; inset: 14px 0 0; z-index: -1;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: rgba(13,6,32,0.97);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  }
+  .nav-sub a { display: block; padding: 10px 18px; letter-spacing: 0.1em; }
+  .nav-sub li:first-child a { padding-top: 16px; }
+  .nav-sub li:last-child a { padding-bottom: 16px; }
+  .nav-drop:hover .nav-sub, .nav-drop:focus-within .nav-sub { opacity: 1; visibility: visible; transform: none; }
+
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  .nav-insta { display: flex; color: rgba(220,210,240,0.85); transition: color 0.2s; }
+  .nav-insta:hover { color: var(--purple-glow); }
+  .nav-insta svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+  .nav-cta {
+    display:flex; align-items:center; gap:8px;
+    padding: 10px 22px;
+    border: 1.5px solid var(--border-hover);
+    border-radius:4px;
+    background: rgba(107,47,160,0.2);
+    color: var(--silver-bright);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem; font-weight:700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.25s;
+  }
+  .nav-cta:hover {
+    background: rgba(155,89,208,0.35);
+    box-shadow: 0 0 20px rgba(155,89,208,0.4);
+  }
+  .nav-cta svg { width:16px; height:16px; fill:currentColor; }
+
+  .nav-mobile { display: none; position: relative; }
+  .nav-mobile summary {
+    list-style: none; cursor: pointer;
+    width: 42px; height: 42px; border: 1.5px solid var(--border-hover); border-radius: 4px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+    background: rgba(107,47,160,0.2);
+  }
+  .nav-mobile summary::-webkit-details-marker { display: none; }
+  .nav-mobile summary span { width: 18px; height: 2px; background: var(--silver-bright); border-radius: 2px; transition: transform 0.2s, opacity 0.2s; }
+  .nav-mobile[open] summary span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-mobile[open] summary span:nth-child(2) { opacity: 0; }
+  .nav-mobile[open] summary span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav-panel {
+    position: absolute; right: 0; top: calc(100% + 10px);
+    width: min(300px, calc(100vw - 40px)); max-height: calc(100vh - 90px); overflow-y: auto;
+    padding: 10px 0;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: rgba(13,6,32,0.98);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    display: flex; flex-direction: column;
+  }
+  .nav-panel a { padding: 12px 20px; }
+  .nav-panel .nav-panel-sub { padding: 8px 20px 8px 34px; font-size: 0.78rem; letter-spacing: 0.08em; color: rgba(200,200,224,0.65); }
+
+  @media(max-width:1060px){
+    .nav-links { display: none; }
+    .nav-mobile { display: block; }
+  }
+  @media(max-width:640px){
+    nav { padding:14px 20px; }
+    .nav-cta span { display:none; }
+    .nav-insta { display: none; }
+  }
+</style>
+
+<script>
+  // Fecha o menu mobile ao escolher um link.
+  document.querySelectorAll<HTMLDetailsElement>('.nav-mobile').forEach((d) => {
+    d.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => d.removeAttribute('open')));
+  });
+</script>
