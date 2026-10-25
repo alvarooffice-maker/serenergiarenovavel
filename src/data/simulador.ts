@@ -28,6 +28,6 @@ export const TIPOS_IMOVEL = [
   { value: 'rural', label: 'Rural' },
 ] as const;
 
-/** Endereço da função que grava o lead no SER Hub (Supabase Edge Function `site-lead`). */
+/** Endereço da função que grava o lead no SER Hub (rota pública /publico/site-lead do SER Hub). */
 export const LEAD_ENDPOINT =
-  import.meta.env.PUBLIC_LEAD_ENDPOINT ?? 'https://aickvgjrieeirybtqemh.supabase.co/functions/v1/site-lead';
+  import.meta.env.PUBLIC_LEAD_ENDPOINT ?? 'https://api.serenergiarenovavel.com.br/publico/site-lead';
