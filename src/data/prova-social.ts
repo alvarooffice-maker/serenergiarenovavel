@@ -49,3 +49,12 @@ export const GOOGLE_AVALIAR_URL = 'https://g.page/r/CeBzQ4V-TZjmEAE/review';
 export const MARCAS: { marca: string; item: string; garantia: string }[] = [
   // TODO(Álvaro): ex.: { marca: '...', item: 'Módulos', garantia: '12 anos produto / 25 anos performance' },
 ];
+
+/** Código da ficha da SER no Google (Place ID). */
+export const GOOGLE_PLACE_ID = 'ChIJ5zrvQuKNpJIR4HNDhX5NmOY';
+/**
+ * Chave do Google Maps (restrita a este site; pode ficar no código). Com ela o site mostra as avaliações AO VIVO (Places UI Kit)
+ * e o mapa; sem ela, aparecem as avaliações copiadas abaixo e o link do mapa. Preencha para ligar.
+ */
+export const GOOGLE_MAPS_KEY = '';
+export const ENDERECO = 'Av. Rômulo Maiorana, 300 – São Brás, Belém – PA';
