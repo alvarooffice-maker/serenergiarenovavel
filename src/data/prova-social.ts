@@ -56,5 +56,5 @@ export const GOOGLE_PLACE_ID = 'ChIJ5zrvQuKNpJIR4HNDhX5NmOY';
  * Chave do Google Maps (restrita a este site; pode ficar no código). Com ela o site mostra as avaliações AO VIVO (Places UI Kit)
  * e o mapa; sem ela, aparecem as avaliações copiadas abaixo e o link do mapa. Preencha para ligar.
  */
-export const GOOGLE_MAPS_KEY = '';
+export const GOOGLE_MAPS_KEY = 'AIzaSyBaHx3QqY8lUVDbPlb3cZH71wdgLqnPPh4';  // chave própria da SER, restrita aos endereços da SER; pode ficar no código
 export const ENDERECO = 'Av. Rômulo Maiorana, 300 – São Brás, Belém – PA';
