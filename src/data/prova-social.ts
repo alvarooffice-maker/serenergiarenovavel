@@ -10,12 +10,8 @@ export const REELS_CLIENTES = [
   'https://www.instagram.com/reel/DWJXC2bjjtX/',
 ];
 
-// Fotos e vídeo de drone de instalações reais em Belém.
-// TODO: o Álvaro informa o bairro e a potência (kWp) de cada uma.
-export const INSTALACOES = [
-  { foto: '/prova-social/instalacao-drone-01.jpg', legenda: 'Instalação residencial em Belém', bairro: '', kwp: null },
-  { foto: '/prova-social/instalacao-drone-02.jpg', legenda: 'Sistemas instalados lado a lado no mesmo bairro', bairro: '', kwp: null },
-];
+// Fotos de telhado retiradas por enquanto (poucas e sem informações); o vídeo de drone fica.
+export const INSTALACOES: { foto: string; legenda: string; bairro: string; kwp: number | null }[] = [];
 
 export const VIDEO_DRONE = { src: '/prova-social/instalacao-drone.mp4', poster: '/prova-social/instalacao-drone-poster.jpg' };
 
@@ -35,12 +31,13 @@ export const SIMULADOR = {
 
 // Avaliações copiadas do Google (texto exato, nome como aparece no Google). Vazio = bloco não aparece.
 export const AVALIACOES: { nome: string; nota: number; texto: string; data?: string }[] = [
-  // Avaliações reais do perfil da SER no Google (copiadas em 23/10/2026).
+  // Avaliações reais do perfil da SER no Google (as seis mais recentes e melhores, conferidas em 24/10/2026; todas 5 estrelas).
+  { nome: 'Carlos Eugênio', nota: 5, texto: 'Foi uma parceria muito boa onde encontrei uma empresa muito profissional e que cumpre o que promete estou muito satisfeito', data: 'outubro de 2026' },
+  { nome: 'Gisele Costa', nota: 5, texto: 'Estou completamente satisfeita com o meu projeto. Fui muito bem atendida pelo Kurt Lemos, que foi super atencioso e conseguiu me orientar perante todas as minhas dúvidas( que não foram poucas rsrs), durante toda a negociação e no pós venda. Recomendo a SER ENERGIA RENOVÁVEL.', data: 'outubro de 2026' },
+  { nome: 'Kurt P.', nota: 5, texto: 'Empresa de qualidade, nota máxima, atende diversos setores do mercado de energia e com uma equipe 100% qualificada, recomendo demais!!' },
   { nome: 'Michael S.', nota: 5, texto: 'Quero deixar meu agradecimento à SER Energia pelo excelente serviço! Estou muito satisfeito com os resultados e, principalmente, com a economia de mais de 60% na minha conta de energia elétrica. ⚡💰' },
   { nome: 'Vania M.', nota: 5, texto: 'Atendimento imediato, informações completas sobre o produto adquirido, ótimo atendimento antes, durante e depois da instalação. Um sonho realizado.' },
-  { nome: 'Kurt P.', nota: 5, texto: 'Empresa de qualidade, nota máxima, atende diversos setores do mercado de energia e com uma equipe 100% qualificada, recomendo demais!!' },
   { nome: 'Alessandra Q.', nota: 5, texto: 'A experiência tá sendo maravilhosa, é um sonho realizado. Agora é só aproveitar os benefícios dessa aquisição, que são inúmeros.' },
-  { nome: 'Diego B.', nota: 5, texto: 'Realizando um sonho, espero que traga bastante economia. Recomendo essa empresa, nota 1000 🤝👊' },
 ];
 
 /** Link do perfil da SER no Google (para "ver todas as avaliações"). */
