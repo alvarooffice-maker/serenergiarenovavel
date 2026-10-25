@@ -1,10 +1,11 @@
 ---
-import { REELS_CLIENTES as REELS, INSTALACOES, VIDEO_DRONE, AVALIACOES, MARCAS, GOOGLE_PERFIL_URL, GOOGLE_AVALIAR_URL } from '../data/prova-social';
+import { REELS_CLIENTES as REELS, INSTALACOES, VIDEO_DRONE, AVALIACOES, MARCAS, GOOGLE_PERFIL_URL, GOOGLE_AVALIAR_URL, GOOGLE_PLACE_ID, GOOGLE_MAPS_KEY } from '../data/prova-social';
 import { INSTAGRAM_URL, INSTAGRAM_HANDLE } from '../data/site';
 
 // Blocos vazios não aparecem no site publicado; no `npm run dev` aparecem como lembrete.
 const dev = import.meta.env.DEV;
-const temAlgo = REELS.length || INSTALACOES.length || VIDEO_DRONE || AVALIACOES.length || MARCAS.length;
+const aoVivo = !!(GOOGLE_MAPS_KEY && GOOGLE_PLACE_ID);
+const temAlgo = aoVivo || REELS.length || INSTALACOES.length || VIDEO_DRONE || AVALIACOES.length || MARCAS.length;
 ---
 
 {(temAlgo || dev) && (
@@ -55,7 +56,18 @@ const temAlgo = REELS.length || INSTALACOES.length || VIDEO_DRONE || AVALIACOES.
       </div>
     )}
 
-    {AVALIACOES.length > 0 ? (
+    {aoVivo ? (
+      <div class="google-ao-vivo">
+        <gmp-place-details>
+          <gmp-place-details-place-request place={GOOGLE_PLACE_ID}></gmp-place-details-place-request>
+          <gmp-place-rating></gmp-place-rating>
+          <gmp-place-reviews></gmp-place-reviews>
+        </gmp-place-details>
+        <script is:inline>window.serGoogleOk = function () { google.maps.importLibrary('places'); };</script>
+        <script is:inline async src={`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_KEY}&loading=async&v=weekly&callback=serGoogleOk`}></script>
+        {GOOGLE_PERFIL_URL && <p style="text-align:center;margin-top:14px"><a class="link-google" href={GOOGLE_PERFIL_URL} target="_blank" rel="noopener">Ver todas as avaliações no Google</a></p>}
+      </div>
+    ) : AVALIACOES.length > 0 ? (
       <div class="avaliacoes">
         {AVALIACOES.map((a) => (
           <blockquote class="avaliacao reveal">
@@ -128,6 +140,8 @@ const temAlgo = REELS.length || INSTALACOES.length || VIDEO_DRONE || AVALIACOES.
   .estrelas { color: #fbbf24; letter-spacing: 0.15em; margin-bottom: 10px; }
   .avaliacao footer { margin-top: 12px; font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 0.1em; color: rgba(192,132,252,0.8); }
   .link-google { grid-column: 1 / -1; justify-self: center; color: var(--purple-glow); font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.85rem; }
+  .google-ao-vivo { max-width: 860px; margin: 0 auto 28px; max-height: 640px; overflow-y: auto; border-radius: 12px; }
+  .google-ao-vivo gmp-place-details { display: block; }
   .marcas { display: grid; gap: 2px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--border); }
   .marca { padding: 24px; background: rgba(19,8,37,0.9); text-align: center; }
   .marca-nome { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--silver-bright); }
@@ -169,6 +183,21 @@ const temAlgo = REELS.length || INSTALACOES.length || VIDEO_DRONE || AVALIACOES.
       }
     });
   });
+
+  // Capa real de cada Reel (vem do Instagram pela API e fica guardada no nosso servidor). Sem ela, segue o quadro roxo de sempre.
+  fetch('/instagram/reels.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).then((d) => {
+    if (!d || !Array.isArray(d.itens)) return;
+    document.querySelectorAll<HTMLElement>('[data-reel]').forEach((box) => {
+      const codigo = /instagram\.com\/(?:p|reel|reels|tv)\/([A-Za-z0-9_-]+)/.exec(box.dataset.reel || '')?.[1];
+      const item = d.itens.find((i: { codigo: string; imagem: string }) => i.codigo === codigo);
+      const capa = box.querySelector<HTMLElement>('.reel-capa');
+      if (item && capa && /^\/instagram\/m\/[0-9]+\.jpg$/.test(item.imagem)) {
+        capa.style.backgroundImage = `linear-gradient(180deg, rgba(10,5,20,0.15), rgba(10,5,20,0.78)), url(${item.imagem})`;
+        capa.style.backgroundSize = 'cover';
+        capa.style.backgroundPosition = 'center';
+      }
+    });
+  }).catch(() => { /* sem capas: o quadro roxo continua */ });
 
   // Vídeo de drone: só baixa e toca quando aparece na tela; pausa ao sair.
   document.querySelectorAll<HTMLVideoElement>('[data-lazy-video]').forEach((v) => {
