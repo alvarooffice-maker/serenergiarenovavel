@@ -1,0 +1,4 @@
+# Teste local na VPS (sem Traefik): porta 8088 só no próprio servidor.
+services:
+  site:
+    ports: ["127.0.0.1:8088:80"]

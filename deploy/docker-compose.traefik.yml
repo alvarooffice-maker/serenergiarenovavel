@@ -1,0 +1,23 @@
+# Liga o site ao Traefik (HTTPS). Só aplicar depois que o DNS do domínio apontar para a VPS.
+services:
+  site:
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: coolify
+      traefik.http.middlewares.site-https.redirectscheme.scheme: https
+      traefik.http.middlewares.site-www.redirectregex.regex: ^https://www\.serenergiarenovavel\.com\.br/(.*)
+      traefik.http.middlewares.site-www.redirectregex.replacement: https://serenergiarenovavel.com.br/$${1}
+      traefik.http.middlewares.site-www.redirectregex.permanent: "true"
+      traefik.http.routers.site-http.entrypoints: http
+      traefik.http.routers.site-http.rule: Host(`serenergiarenovavel.com.br`) || Host(`www.serenergiarenovavel.com.br`)
+      traefik.http.routers.site-http.middlewares: site-https
+      traefik.http.routers.site.entrypoints: https
+      traefik.http.routers.site.rule: Host(`serenergiarenovavel.com.br`)
+      traefik.http.routers.site.tls: "true"
+      traefik.http.routers.site.tls.certresolver: letsencrypt
+      traefik.http.routers.site-www.entrypoints: https
+      traefik.http.routers.site-www.rule: Host(`www.serenergiarenovavel.com.br`)
+      traefik.http.routers.site-www.middlewares: site-www
+      traefik.http.routers.site-www.tls: "true"
+      traefik.http.routers.site-www.tls.certresolver: letsencrypt
+      traefik.http.services.site.loadbalancer.server.port: "80"
