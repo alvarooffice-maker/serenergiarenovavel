@@ -372,6 +372,7 @@ const config = JSON.stringify({ ...SIMULADOR, endpoint: LEAD_ENDPOINT, whatsapp:
         const resp = await fetch(cfg.endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: AbortSignal.timeout(8000),   // se o servidor demorar, não deixa a pessoa esperando: cai no WhatsApp
           body: JSON.stringify({
             nome: val('nome'), telefone, local: val('local'), lgpd: true,
             empresa: val('empresa'), tempo_ms: Date.now() - carregadoEm,
@@ -386,10 +387,6 @@ const config = JSON.stringify({ ...SIMULADOR, endpoint: LEAD_ENDPOINT, whatsapp:
         btn.disabled = false;
       }
 
-      const aviso = box.querySelector<HTMLElement>('[data-aviso]')!;
-      aviso.hidden = !falhou;
-      aviso.textContent = falhou ? 'Não conseguimos registrar seus dados agora. Fale com a gente pelo WhatsApp abaixo para receber a proposta.' : '';
-
       out('kwp', `${num(r.kwp, 2)} kWp`);
       out('investimento', faixa(r.invMin, r.invMax, v => brl(v)));
       out('retorno', faixa(r.retMin, r.retMax, anosTxt, ' anos'));
@@ -400,7 +397,19 @@ const config = JSON.stringify({ ...SIMULADOR, endpoint: LEAD_ENDPOINT, whatsapp:
       const tipoLabel = box.querySelector<HTMLInputElement>(`input[name="tipo"][value="${r.tipo}"]`)!.nextElementSibling!.textContent;
       const msg = `Olá! Sou ${val('nome')} (${val('local')}). Simulei no site: conta de ${brl(r.conta)} (${tipoLabel?.toLowerCase()}), ` +
         `${r.placas} placas de ${cfg.potenciaPlacaW} W (${num(r.kwp, 2)} kWp), economia de ${faixa(r.ecoMin, r.ecoMax, v => brl(v))} por mês. Quero uma proposta.`;
-      box.querySelector<HTMLAnchorElement>('[data-whatsapp]')!.href = `${cfg.whatsapp}?text=${encodeURIComponent(msg)}`;
+      const linkWhatsapp = `${cfg.whatsapp}?text=${encodeURIComponent(msg)}`;
+      box.querySelector<HTMLAnchorElement>('[data-whatsapp]')!.href = linkWhatsapp;
+      // se não deu para registrar, o botão do WhatsApp aparece logo no aviso, com a simulação já escrita
+      const aviso = box.querySelector<HTMLElement>('[data-aviso]')!;
+      aviso.hidden = !falhou;
+      aviso.replaceChildren();
+      if (falhou) {
+        aviso.append('Não conseguimos registrar seus dados agora. Fale com a gente pelo WhatsApp para receber a proposta: ');
+        const a = document.createElement('a');
+        a.href = linkWhatsapp; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Chamar no WhatsApp';
+        a.style.cssText = 'font-weight:700;text-decoration:underline;color:inherit';
+        aviso.append(a);
+      }
       mostrar(completo);
     });
 
