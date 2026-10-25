@@ -4,7 +4,7 @@ import { INSTAGRAM_URL, INSTAGRAM_HANDLE } from '../data/site';
 
 // Blocos vazios não aparecem no site publicado; no `npm run dev` aparecem como lembrete.
 const dev = import.meta.env.DEV;
-const temAlgo = REELS.length || INSTALACOES.length || AVALIACOES.length || MARCAS.length;
+const temAlgo = REELS.length || INSTALACOES.length || VIDEO_DRONE || AVALIACOES.length || MARCAS.length;
 ---
 
 {(temAlgo || dev) && (
@@ -18,10 +18,13 @@ const temAlgo = REELS.length || INSTALACOES.length || AVALIACOES.length || MARCA
     {REELS.length > 0 ? (
       <div class="reels" data-reels>
         {REELS.map((url) => (
-          <div class="reel">
-            <blockquote class="instagram-media" data-instgrm-permalink={url} data-instgrm-version="14">
-              <a href={url} target="_blank" rel="noopener">Ver no Instagram</a>
-            </blockquote>
+          <div class="reel" data-reel={url}>
+            <button type="button" class="reel-capa" aria-label="Carregar Reel de cliente do Instagram">
+              <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              <span>Reel de cliente</span>
+              <small>Toque para assistir</small>
+            </button>
+            <a class="reel-link" href={url} target="_blank" rel="noopener">Abrir no Instagram</a>
           </div>
         ))}
       </div>
@@ -29,7 +32,7 @@ const temAlgo = REELS.length || INSTALACOES.length || AVALIACOES.length || MARCA
       <div class="todo">TODO: colar as URLs dos Reels de clientes em <code>src/data/prova-social.ts</code> (REELS_CLIENTES).</div>
     )}
 
-    {INSTALACOES.length > 0 && (
+    {(INSTALACOES.length > 0 || VIDEO_DRONE) && (
       <div class="fotos">
         {VIDEO_DRONE && (
           <figure class="foto foto--video reveal">
@@ -98,7 +101,16 @@ const temAlgo = REELS.length || INSTALACOES.length || AVALIACOES.length || MARCA
   #clientes { padding: 90px 24px; }
   .reels, .fotos, .avaliacoes, .marcas, .todo { max-width: 1080px; margin: 0 auto 28px; }
   .reels { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
-  .reel { flex: 1 1 300px; max-width: 340px; min-height: 480px; }
+  .reel { flex: 1 1 300px; max-width: 340px; display: flex; flex-direction: column; gap: 8px; }
+  .reel-capa {
+    aspect-ratio: 9 / 14; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    border: 1px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--silver-bright);
+    background: linear-gradient(160deg, rgba(88,28,135,0.55), rgba(19,8,37,0.9));
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .reel-capa small { font-weight: 400; letter-spacing: 0.05em; text-transform: none; opacity: 0.7; }
+  .reel-capa:hover { border-color: var(--purple-glow); }
+  .reel-link { text-align: center; font-size: 0.8rem; color: var(--purple-glow); }
   .reel :global(.instagram-media) { min-width: 0 !important; width: 100% !important; margin: 0 !important; }
   .fotos { display: grid; gap: 16px; grid-template-columns: repeat(4, 1fr); align-items: start; }
   .foto { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: rgba(19,8,37,0.7); }
@@ -140,19 +152,23 @@ const temAlgo = REELS.length || INSTALACOES.length || AVALIACOES.length || MARCA
 </style>
 
 <script>
-  // Só carrega o script de incorporação do Instagram quando a seção estiver perto da tela.
-  const reels = document.querySelector('[data-reels]');
-  if (reels) {
-    const io = new IntersectionObserver((entries) => {
-      if (!entries.some((e) => e.isIntersecting)) return;
-      io.disconnect();
-      const s = document.createElement('script');
-      s.src = 'https://www.instagram.com/embed.js';
-      s.async = true;
-      document.body.appendChild(s);
-    }, { rootMargin: '400px' });
-    io.observe(reels);
-  }
+  // O Instagram só é carregado quando a pessoa toca no Reel: o embed.js e os iframes pesam vários MB.
+  let embedPronto = false;
+  document.querySelectorAll<HTMLElement>('[data-reel]').forEach((box) => {
+    box.querySelector('.reel-capa')?.addEventListener('click', () => {
+      const url = box.dataset.reel!;
+      box.innerHTML = `<blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14"><a href="${url}" target="_blank" rel="noopener">Ver no Instagram</a></blockquote>`;
+      const w = window as any;
+      if (w.instgrm) w.instgrm.Embeds.process();
+      else if (!embedPronto) {
+        embedPronto = true;
+        const s = document.createElement('script');
+        s.src = 'https://www.instagram.com/embed.js';
+        s.async = true;
+        document.body.appendChild(s);
+      }
+    });
+  });
 
   // Vídeo de drone: só baixa e toca quando aparece na tela; pausa ao sair.
   document.querySelectorAll<HTMLVideoElement>('[data-lazy-video]').forEach((v) => {
